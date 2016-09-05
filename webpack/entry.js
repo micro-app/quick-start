@@ -1,0 +1,1 @@
+module.exports = {"index":"/Users/lixinliang/Project/app/src/entry/index.js"}
