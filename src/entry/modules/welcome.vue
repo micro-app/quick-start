@@ -1,0 +1,156 @@
+<script>
+import { lang } from '../lang/';
+import {
+    mobile,
+    safari,
+} from './user-agent.js';
+
+let { desc, button } = lang.welcome;
+
+export default {
+	data () {
+		return {
+			desc,
+			button,
+            mobile,
+		}
+	},
+	methods : {
+        tap () {
+            if (safari) {
+                this.$parent.show('profile');
+            } else {
+                this.$parent.show('tips');
+            }
+		},
+        click () {
+			console.log('click event');
+            // TODO: pc case
+		},
+	},
+};
+</script>
+
+<template>
+	<div class="app-page welcome">
+        <div class="welcome-slogon">
+            <div class="welcome-logo">L</div>
+            <div class="welcome-title">micro-app</div>
+            <div class="welcome-desc">{{ desc }}</div>
+        </div>
+		<div class="welcome-button"
+		 	v-if="mobile"
+            v-action:active
+			v-touch:tap="tap"
+		>{{ button }}</div>
+		<div class="welcome-button"
+			v-if="!mobile"
+		 	v-on:click="click"
+		>{{ button }}</div>
+	</div>
+</template>
+
+<style lang="scss">
+    $baseColor : #3995EE;
+    $activeColor : #2485E3;
+    .welcome {
+        z-index: 1;
+    }
+    .welcome-slogon {
+        width: 100%;
+        min-width: 414px;
+        height: 100%;
+        max-height: 568px;
+        overflow: hidden;
+        position: relative;
+        left: 50%;
+        transform: translateX(-50%);
+        text-align: center;
+        pointer-events: none;
+    }
+    .welcome-logo {
+        margin: 55px auto 0;
+        border-radius: 15%;
+        color: $baseColor;
+        border: 1px solid currentColor;
+        width: 120px + 24;
+        height: 120px + 24;
+        line-height: 120px + 24;
+        font-size: 80px + 12;
+    }
+    .welcome-title {
+        color: #fff;
+        letter-spacing: 1px;
+        text-shadow: 0 0 3px $baseColor;
+        text-transform: uppercase;
+        height: 44px + 20;
+        line-height: 44px + 20;
+        font-size: 36px + 20;
+        margin-top: 50px;
+    }
+    .welcome-desc {
+        height: 30px + 20;
+        line-height: 30px + 20;
+        font-size: 16px + 10;
+    }
+    .welcome-button {
+        position: absolute;
+        left: 50%;
+        transform: translateX(-50%);
+        background: $baseColor;
+        cursor: pointer;
+        color: #fff;
+        bottom: 90px;
+        padding: 0 12px + 3;
+        height: 42px + 12;
+        line-height: 42px + 12;
+        font-size: 20px + 8;
+        border-radius: 5px + 2;
+        .device-mobile & {
+            &.is-active {
+                background: $activeColor;
+            }
+        }
+        .device-pc & {
+            &:hover {
+                background: $activeColor;
+            }
+        }
+    }
+    @media only screen and (max-width: 414px) {
+        .welcome-logo {
+            width: 120px;
+            height: 120px;
+            line-height: 120px;
+            font-size: 80px;
+            margin-top: 30px + 15;
+        }
+        .welcome-title {
+            height: 44px;
+            line-height: 44px;
+            font-size: 36px;
+            margin-top: 25px + 15;
+        }
+        .welcome-desc {
+            height: 30px;
+            line-height: 30px;
+            font-size: 16px;
+        }
+        .welcome-button {
+            bottom: 40px;
+            padding: 0 12px;
+            height: 42px;
+            line-height: 42px;
+            font-size: 20px;
+            border-radius: 5px;
+        }
+    }
+    @media only screen and (max-width: 320px) {
+        .welcome-logo {
+            margin-top: 30px;
+        }
+        .welcome-title {
+            margin-top: 25px;
+        }
+    }
+</style>
