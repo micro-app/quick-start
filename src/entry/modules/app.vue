@@ -5,6 +5,7 @@ import {
 	standalone,
 } from './user-agent.js';
 import tips from './tips.vue';
+import finish from './finish.vue';
 import topbar from './topbar.vue';
 import install from './install.vue';
 import profile from './profile.vue';
@@ -16,32 +17,35 @@ Vue.transition('fade', {
 	},
 });
 
+let history = [];
+
 export default {
 	components : {
 		tips,
+		finish,
 		topbar,
 		install,
 		profile,
 		welcome,
 	},
 	data () {
+		let img = new Image;
 		return {
 			mobile,
 			app : {
-				img : new Image,
+				img,
 			},
 			standalone,
-			prevPage : 'welcome',
 			activePage : 'welcome',
 		}
 	},
 	methods : {
 		show ( page ) {
-			this.prevPage = this.activePage;
+			history.push(this.activePage);
 			this.activePage = page;
 		},
 		back () {
-			this.show(this.prevPage);
+			this.activePage = history.pop();
 		},
 	},
 };

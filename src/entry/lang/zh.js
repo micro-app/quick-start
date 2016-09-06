@@ -1,7 +1,11 @@
 exports.zh = {
+    topbar : {
+        back : '返回',
+    },
     welcome : {
         desc : '一款轻应用构建工具',
         button : '立刻体验',
+        tips : '仅支持Safari',
     },
     tips : {
         title : '请用Safari浏览器打开链接',
@@ -20,10 +24,12 @@ exports.zh = {
         selectIcon : '请选择图片',
         tips : '图标请求失败，请重新输入',
     },
-    topbar : {
-        back : '返回',
-    },
     install : {
         button : '安装',
+    },
+    finish : {
+        title : '最后一步',
+        step1 : '点击底部的分享按钮',
+        step2 : '选择添加到主屏幕',
     },
 };
