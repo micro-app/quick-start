@@ -38,7 +38,11 @@ export default {
             if (this.appIconType == 'local') {
                 app.icon = this.appIconFilePath ? this.appIconBase64 : defaultIcon;
             }
-			app.img.src = app.icon;
+			if (app.img.src === app.icon) {
+				this.$parent.show('install');
+			} else {
+				app.img.src = app.icon;
+			}
 		},
 		focus ( event, id ) {
 		    let target = event.target;

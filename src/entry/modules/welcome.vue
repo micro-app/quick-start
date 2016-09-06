@@ -5,14 +5,22 @@ import {
     safari,
 } from './user-agent.js';
 
-let { desc, button } = lang.welcome;
+let {
+    desc,
+    tips,
+    button,
+ } = lang.welcome;
+
+let tipsTimeout = 0;
 
 export default {
 	data () {
 		return {
 			desc,
+            tips,
 			button,
             mobile,
+            showTips : false,
 		}
 	},
 	methods : {
@@ -24,8 +32,11 @@ export default {
             }
 		},
         click () {
-			console.log('click event');
-            // TODO: pc case
+            clearTimeout(tipsTimeout);
+			this.showTips = true;
+            tipsTimeout = setTimeout(() => {
+                this.showTips = false;
+            }, 2500);
 		},
 	},
 };
@@ -38,6 +49,7 @@ export default {
             <div class="welcome-title">micro-app</div>
             <div class="welcome-desc">{{ desc }}</div>
         </div>
+        <div class="welcome-tips" v-if="!mobile" v-show="showTips" transition="fade">{{ tips }}</div>
 		<div class="welcome-button"
 		 	v-if="mobile"
             v-action:active
@@ -117,6 +129,24 @@ export default {
             }
         }
     }
+    .welcome-tips {
+        position: absolute;
+        left: 50%;
+        transform: translateX(-50%);
+        text-align: center;
+        font-size: 16px;
+        color: #e96900;
+        height: 45px;
+        line-height: 45px;
+        bottom: 40px;
+        &.fade-transition {
+            transition: opacity 300ms linear;
+        }
+        &.fade-enter,
+        &.fade-leave {
+            opacity: 0;
+        }
+    }
     @media only screen and (max-width: 414px) {
         .welcome-logo {
             width: 120px;
@@ -144,6 +174,11 @@ export default {
             font-size: 20px;
             border-radius: 5px;
         }
+        .welcome-tips {
+            height: 25px;
+            line-height: 25px;
+            bottom: 10px;
+        }
     }
     @media only screen and (max-width: 320px) {
         .welcome-logo {
@@ -153,4 +188,5 @@ export default {
             margin-top: 25px;
         }
     }
+
 </style>

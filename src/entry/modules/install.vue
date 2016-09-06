@@ -18,10 +18,18 @@ export default {
 			y : 0,
 			width : 0,
 			height : 0,
-			scale : 1,
-			rotateZ : 0,
-			translateX : 0,
-			translateY : 0,
+			delta : {
+				scale : 1,
+				rotate : 0,
+				translateX : 0,
+				translateY : 0,
+			},
+			origin : {
+				scale : 1,
+				rotate : 0,
+				translateX : 0,
+				translateY : 0,
+			},
 		}
 	},
 	ready () {
@@ -32,60 +40,74 @@ export default {
 	},
     methods : {
         tap () {
-            // TODO: clip function
-            console.log('tap');
+            this.$parent.show('finish');
         },
 		init () {
-			// let img = this.app.img;
-			// let size = this.size;
-			// this.x = 0;
-			// this.y = 0;
-			// this.width = img.width;
-			// this.height = img.height;
-			// this.rotateZ = 0;
-			// this.translateX = 0;
-			// this.translateY = 0;
-			// if (img.width > img.height) {
-			// 	this.x = (img.height - img.width) / 2;
-			// 	this.scale = size / img.height;
-			// } else {
-			// 	this.y = (img.width - img.height) / 2;
-			// 	this.scale = size / img.width;
-			// }
-			// this.render();
+			let img = this.app.img;
+			let size = this.size;
+			this.x = 0;
+			this.y = 0;
+			this.width = img.width;
+			this.height = img.height;
+			let delta = this.delta;
+			let origin = this.origin;
+			delta.scale = 1;
+			delta.rotate = delta.translateX = delta.translateY = origin.rotate = origin.translateX = origin.translateY = 0;
+			if (img.width > img.height) {
+				this.x = (img.height - img.width) / 2;
+				this.origin.scale = size / img.height;
+			} else {
+				this.y = (img.width - img.height) / 2;
+				this.origin.scale = size / img.width;
+			}
+			this.render();
 		},
-		render ( delta = {} ) {
-			let { scale = 0, rotateZ = 0, translateX = 0, translateY = 0 } = delta;
-			let initScale = parseFloat((this.scale + scale).toFixed(3));
-			let resetScale = parseFloat((1/initScale).toFixed(3));
+		render () {
 			context.clearRect(0, 0, canvas.width, canvas.height);
-			context.rotate(0);
-			context.scale(initScale, initScale);
-			context.translate(this.translateX + translateX, this.translateY + translateY);
+			this.applyTransform();
 			context.drawImage(this.app.img, this.x, this.y, this.width, this.height);
-			context.translate(this.translateX + translateX, this.translateY + translateY);
-			context.scale(resetScale, resetScale);
+			this.resetTransform();
+		},
+		applyTransform () {
+			let scale = this.origin.scale * this.delta.scale;
+			let translateX = (this.origin.translateX + this.delta.translateX) * this.origin.scale;
+			let translateY = (this.origin.translateY + this.delta.translateY) * this.origin.scale;
+			context.translate(translateX, translateY);
+			context.scale(scale, scale);
 			context.rotate(0);
+		},
+		resetTransform () {
+			let scale = 1 / this.origin.scale / this.delta.scale;
+			let translateX = (this.origin.translateX + this.delta.translateX) * this.origin.scale;
+			let translateY = (this.origin.translateY + this.delta.translateY) * this.origin.scale;
+			context.rotate(0);
+			context.scale(scale, scale);
+			context.translate(-translateX, -translateY);
 		},
 		panend ( event ) {
-			// this.render({
-			// 	translateX : event.deltaX,
-			// 	translateY : event.deltaY,
-			// });
-			// this.translateX += event.deltaX;
-			// this.translateY += event.deltaY;
+			this.delta.translateX = 0;
+			this.delta.translateY = 0;
+			this.origin.translateX += event.deltaX;
+			this.origin.translateY += event.deltaY;
+			this.render();
+			// TODO: image clip
 		},
 		panmove ( event ) {
-			// this.render({
-			// 	translateX : event.deltaX,
-			// 	translateY : event.deltaY,
-			// });
+			this.delta.translateX = event.deltaX;
+			this.delta.translateY = event.deltaY;
+			this.render();
 		},
-		pinch () {
-			console.log('pinch', arguments);
+		pinch ( event ) {
+			console.log('pinch', event);
 		},
-		rotate () {
-			console.log('rotate', arguments);
+		pinchend ( event ) {
+			console.log('pinchend', event);
+		},
+		pinchmove ( event ) {
+			console.log('pinchmove', event);
+		},
+		rotate ( event ) {
+			console.log('rotate', event);
 		},
     },
 };
@@ -98,10 +120,6 @@ export default {
 				v-el:canvas
 				width="{{ size }}"
 				height="{{ size }}"
-				v-touch:panend="panend"
-				v-touch:panmove="panmove"
-				v-touch:pinch="pinch"
-				v-touch:rotate="rotate"
 			></canvas>
         </div>
         <div class="install-button"
