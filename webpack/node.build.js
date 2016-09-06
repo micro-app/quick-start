@@ -38,8 +38,6 @@ let entry = {};
     });
 }).then(() => {
     return new Promise(( resolve, reject ) => {
-        resolve();
-        return;
         let content = path.join(__dirname, '../src/entry/');
         fs.readdir(content, ( err, files ) => {
             if (err) {
@@ -65,6 +63,9 @@ let entry = {};
         });
     });
 }).then(() => {
+    // 
+    return 1;
+    //
     return new Promise(( resolve, reject ) => {
         let content = path.join(__dirname, '../dist/');
         fs.readdir(content, ( err, files ) => {
