@@ -12,10 +12,6 @@ if (!standalone) {
     location.hash = '';
 }
 
-// document.addEventListener('touchmove', function ( event ) {
-//     event.preventDefault();
-// }, false);
-
 Vue.use(VueHref);
 Vue.use(VueTouch);
 Vue.use(VueAction);
