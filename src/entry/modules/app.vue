@@ -123,16 +123,6 @@ export default {
 	        line-height: 42px + 12;
 	        font-size: 20px + 8;
 	        border-radius: 5px + 2;
-	        .device-mobile & {
-	            &.is-active {
-	                background: $activeColor;
-	            }
-	        }
-	        .device-pc & {
-	            &:hover {
-	                background: $activeColor;
-	            }
-	        }
 			@media only screen and (max-width: 414px) {
 				& {
 					bottom: 40px;
@@ -144,5 +134,15 @@ export default {
 				}
 			}
 	    }
+		&.device-mobile {
+			.app-button.is-active {
+				background: $activeColor;
+			}
+		}
+		&.device-pc {
+			.app-button:hover {
+				background: $activeColor;
+			}
+		}
 	}
 </style>
