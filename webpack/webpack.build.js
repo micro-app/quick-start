@@ -35,7 +35,7 @@ module.exports = {
             },
             {
                 test : /\.(png|jpg|gif|svg)$/,
-                loader : 'url?limit=10240&name=../img/[name].[ext]?[hash]',
+                loader : 'url?limit=20480&name=../img/[name].[ext]?[hash]',
             },
             {
                 test : /\.css$/,

@@ -1,1 +1,1 @@
-module.exports = {"index":"/Users/lixinliang/Project/app/src/entry/index.js"}
+module.exports = {"index":"/Users/lixinliang/GitHub/quick-start/src/entry/index.js"}
