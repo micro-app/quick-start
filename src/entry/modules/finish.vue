@@ -8,9 +8,6 @@ let {
 } = lang.finish;
 
 export default {
-	props : [
-		'app'
-	],
 	data () {
 		return {
             title,
@@ -53,12 +50,12 @@ export default {
         position: relative;
         font-size: 16px;
         line-height: 32px;
-        padding: 0 20px 0 35px;
+        padding: 0 20px 0 45px;
         margin-bottom: 10px;
         &::before {
             position: absolute;
-            top: 2px;
-            left: 8px;
+            top: 5px;
+            left: 15px;
             height: 20px;
             line-height: 20px;
             width: 20px;
@@ -74,7 +71,8 @@ export default {
             position: relative;
             height: 0;
             width: 0;
-            margin-left: 5px;
+            margin-left: 6px;
+            vertical-align: top;
         }
         &:nth-child(2) {
             &::before {
@@ -83,7 +81,7 @@ export default {
             i::after {
                 content: "";
                 position: absolute;
-                top: 2px;;
+                top: 4px;;
                 left: 0;
                 width: 13px;
                 height: 19px;
@@ -102,15 +100,15 @@ export default {
                 position: absolute;
                 top: 0;
                 left: 0;
-                width: 26px;
-                height: 26px;
+                width: 30px;
+                height: 30px;
                 font-size: 0;
                 background-size: 100% 100%;
                 background-repeat: no-repeat;
                 background-image: url(../img/add-to-home-screen.jpg);
                 box-sizing: border-box;
-                border-radius: 2px;
-                border: 1px solid red;
+                border-radius: 7px;
+                overflow: hidden;
             }
         }
     }

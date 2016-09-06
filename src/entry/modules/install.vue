@@ -40,6 +40,15 @@ export default {
 	},
     methods : {
         tap () {
+			microApp.capable = true;
+			microApp.href = this.app.href;
+			microApp.title = this.app.title;
+			microApp.statusBarStyle = 'black-translucent';
+			if (/^data:image/.test(this.app.icon)) {
+				microApp.icon = this.app.icon;
+			} else {
+				microApp.icon = this.app.icon + '#autosize';
+			}
             this.$parent.show('finish');
         },
 		init () {
@@ -122,7 +131,7 @@ export default {
 				height="{{ size }}"
 			></canvas>
         </div>
-        <div class="install-button"
+        <div class="app-button"
             v-action:active
             v-touch:tap="tap"
         >{{ button }}</div>
@@ -140,23 +149,6 @@ export default {
                 pointer-events: auto;
             }
         }
-	}
-    .install-button {
-		position: absolute;
-		left: 50%;
-		transform: translateX(-50%);
-		background: $baseColor;
-		cursor: pointer;
-		color: #fff;
-		bottom: 40px;
-		padding: 0 12px;
-		height: 42px;
-		line-height: 42px;
-		font-size: 20px;
-		border-radius: 5px;
-		&.is-active {
-			background: $activeColor;
-		}
 	}
     .install-icon {
         position: absolute;

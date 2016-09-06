@@ -2,6 +2,8 @@
 import { lang } from '../lang/';
 import defaultIcon from '../img/default.jpg';
 
+// TODO: select status-bar-style
+
 export default {
 	props : [
 		'app'
@@ -114,7 +116,7 @@ export default {
 			<input type="file" v-model="appIconFilePath" v-on:change="getFile($event)">
 		</div>
 		<div class="profile-tips" v-show="error" transition="fade">{{ tips }}</div>
-		<div class="profile-button"
+		<div class="app-button"
 			v-action:active
 			v-touch:tap="tap"
 		>{{ button }}</div>
@@ -134,23 +136,6 @@ export default {
 		font-size: 28px;
 		color: $baseColor;
 		margin-top: 15px;
-	}
-	.profile-button {
-		position: absolute;
-		left: 50%;
-		transform: translateX(-50%);
-		background: $baseColor;
-		cursor: pointer;
-		color: #fff;
-		bottom: 40px;
-		padding: 0 12px;
-		height: 42px;
-		line-height: 42px;
-		font-size: 20px;
-		border-radius: 5px;
-		&.is-active {
-			background: $activeColor;
-		}
 	}
 	.profile-detail {
 		height: 45px;

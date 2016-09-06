@@ -50,12 +50,12 @@ export default {
             <div class="welcome-desc">{{ desc }}</div>
         </div>
         <div class="welcome-tips" v-if="!mobile" v-show="showTips" transition="fade">{{ tips }}</div>
-		<div class="welcome-button"
+		<div class="app-button"
 		 	v-if="mobile"
             v-action:active
 			v-touch:tap="tap"
 		>{{ button }}</div>
-		<div class="welcome-button"
+		<div class="app-button"
 			v-if="!mobile"
 		 	v-on:click="click"
 		>{{ button }}</div>
@@ -105,30 +105,6 @@ export default {
         line-height: 30px + 20;
         font-size: 16px + 10;
     }
-    .welcome-button {
-        position: absolute;
-        left: 50%;
-        transform: translateX(-50%);
-        background: $baseColor;
-        cursor: pointer;
-        color: #fff;
-        bottom: 90px;
-        padding: 0 12px + 3;
-        height: 42px + 12;
-        line-height: 42px + 12;
-        font-size: 20px + 8;
-        border-radius: 5px + 2;
-        .device-mobile & {
-            &.is-active {
-                background: $activeColor;
-            }
-        }
-        .device-pc & {
-            &:hover {
-                background: $activeColor;
-            }
-        }
-    }
     .welcome-tips {
         position: absolute;
         left: 50%;
@@ -165,14 +141,6 @@ export default {
             height: 30px;
             line-height: 30px;
             font-size: 16px;
-        }
-        .welcome-button {
-            bottom: 40px;
-            padding: 0 12px;
-            height: 42px;
-            line-height: 42px;
-            font-size: 20px;
-            border-radius: 5px;
         }
         .welcome-tips {
             height: 25px;
