@@ -64,6 +64,8 @@ export default {
 </template>
 
 <style lang="scss">
+	$baseColor : #3995EE;
+	$activeColor : #2485E3;
 	html,
 	body,
 	#app {
@@ -108,5 +110,39 @@ export default {
 	            min-height: 480px;
 	        }
 		}
+	    .app-button {
+	        position: absolute;
+	        left: 50%;
+	        transform: translateX(-50%);
+	        background: $baseColor;
+	        cursor: pointer;
+	        color: #fff;
+	        bottom: 90px;
+	        padding: 0 12px + 3;
+	        height: 42px + 12;
+	        line-height: 42px + 12;
+	        font-size: 20px + 8;
+	        border-radius: 5px + 2;
+	        .device-mobile & {
+	            &.is-active {
+	                background: $activeColor;
+	            }
+	        }
+	        .device-pc & {
+	            &:hover {
+	                background: $activeColor;
+	            }
+	        }
+			@media only screen and (max-width: 414px) {
+				& {
+					bottom: 40px;
+					padding: 0 12px;
+					height: 42px;
+					line-height: 42px;
+					font-size: 20px;
+					border-radius: 5px;
+				}
+			}
+	    }
 	}
 </style>
