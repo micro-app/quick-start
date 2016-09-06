@@ -63,9 +63,6 @@ let entry = {};
         });
     });
 }).then(() => {
-    // 
-    return 1;
-    //
     return new Promise(( resolve, reject ) => {
         let content = path.join(__dirname, '../dist/');
         fs.readdir(content, ( err, files ) => {
