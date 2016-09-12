@@ -7,6 +7,7 @@ let { button } = lang.install;
 let canvas;
 let context;
 let rotation;
+let allowToDataURL;
 
 export default {
 	props : [
@@ -34,38 +35,63 @@ export default {
 			microApp.href = this.app.href;
 			microApp.title = this.app.title;
 			microApp.statusBarStyle = this.app.statusBarStyle;
-			if (/^data:image/.test(this.app.icon)) {
-				microApp.icon = this.app.icon;
+			if (allowToDataURL) {
+				microApp.icon = canvas.toDataURL();
 			} else {
-				microApp.icon = this.app.icon + '#autosize';
+				if (/^data:image/.test(this.app.icon)) {
+					microApp.icon = this.app.icon;
+				} else {
+					microApp.icon = this.app.icon + '#autosize';
+				}
 			}
             this.$parent.show('finish');
         },
 		init () {
 			cliper.reset(this.app.img);
+			try {
+				canvas.toDataURL();
+				allowToDataURL = true;
+			} catch (e) {
+				allowToDataURL = false;
+			}
 		},
 		panend ( event ) {
+			if (!allowToDataURL) {
+				return;
+			}
 			cliper.deltaX = event.deltaX;
 			cliper.deltaY = event.deltaY;
 			cliper.save();
 			cliper.render();
 		},
 		panmove ( event ) {
+			if (!allowToDataURL) {
+				return;
+			}
 			cliper.deltaX = event.deltaX;
 			cliper.deltaY = event.deltaY;
 			cliper.render();
 		},
 		pinchend ( event ) {
+			if (!allowToDataURL) {
+				return;
+			}
 			cliper.scale = event.scale;
 			cliper.rotation = event.rotation - rotation;
 			cliper.render();
 		},
 		pinchmove ( event ) {
+			if (!allowToDataURL) {
+				return;
+			}
 			cliper.scale = event.scale;
 			cliper.rotation = event.rotation - rotation;
 			cliper.render();
 		},
 		pinchstart ( event ) {
+			if (!allowToDataURL) {
+				return;
+			}
 			rotation = event.rotation;
 		},
     },
@@ -77,14 +103,14 @@ export default {
 		<div class="install-box">
 			<div class="install-icon">
 				<canvas
-				v-el:canvas
-				width="{{ size }}"
-				height="{{ size }}"
-				v-touch:panend="panend"
-				v-touch:panmove="panmove"
-				v-touch:pinchend="pinchend"
-				v-touch:pinchmove="pinchmove"
-				v-touch:pinchstart="pinchstart"
+					v-el:canvas
+					width="{{ size }}"
+					height="{{ size }}"
+					v-touch:panend="panend"
+					v-touch:panmove="panmove"
+					v-touch:pinchend="pinchend"
+					v-touch:pinchmove="pinchmove"
+					v-touch:pinchstart="pinchstart"
 				></canvas>
 			</div>
 		</div>

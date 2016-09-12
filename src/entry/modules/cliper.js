@@ -1,3 +1,5 @@
+// TODO: 缩放旋转有个闪屏的bug 需要确认
+
 let cliper = {};
 
 let $scale = 0;
@@ -19,10 +21,10 @@ cliper.reset = function ( img ) {
     $deltaX = $deltaY = -this.size / 2;
     if (img.width > img.height) {
         $scale = this.size / img.height;
-        $deltaX -= (img.height - img.width) / 2;
+        $deltaX -= (img.width - img.height) * $scale / 2;
     } else {
         $scale = this.size / img.width;
-        $deltaY -= (img.width - img.height) / 2;
+        $deltaY -= (img.height - img.width) * $scale / 2;
     }
     this.render();
 };
