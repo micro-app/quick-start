@@ -1,8 +1,7 @@
 <script>
 import { lang } from '../lang/';
 import defaultIcon from '../img/default.jpg';
-
-// TODO: select status-bar-style
+// import defaultIcon from '../img/safari.png';
 
 export default {
 	props : [
@@ -11,7 +10,8 @@ export default {
 	data () {
 		let profile = JSON.parse(JSON.stringify(lang.profile));
 		// profile.appName = profile.appLinkProtocol = profile.appLinkAddress = profile.appIconType = profile.appIconProtocol = profile.appIconAddress = profile.appIconFilePath = profile.appIconBase64 = '';
-		profile.appName = profile.appLink = profile.appIcon = profile.appIconType = profile.appIconFilePath = profile.appIconBase64 = '';
+		profile.appName = profile.appLink = profile.appStatusBarStyle = profile.appIcon = profile.appIconType = profile.appIconFilePath = profile.appIconBase64 = '';
+		profile.statusBarStyleType = ['', 'white', 'black', 'black-translucent'];
 		profile.error = false;
 		return profile;
 	},
@@ -32,8 +32,9 @@ export default {
 			// // app.href = this.appLinkAddress ? this.appLinkProtocol + this.appLinkAddress : null;
 			// app.icon = this.appIconAddress ? this.appIconProtocol + this.appIconAddress : defaultIcon;
 			let app = this.app;
-			app.title = this.appName ? this.appName : null;
 			app.href = this.appLink ? this.appLink : null;
+			app.title = this.appName ? this.appName : null;
+			app.statusBarStyle = this.statusBarStyle ? this.statusBarStyle : null;
             if (this.appIconType == 'web') {
 				app.icon = this.appIcon ? this.appIcon : defaultIcon;
             }
@@ -92,6 +93,14 @@ export default {
 			<div class="profile-main">
 				<input type="text" placeholder="{{ appLinkPlaceholder }}" v-el:appLink v-model="appLink">
 			</div>
+		</div>
+		<div class="profile-detail">
+			<div class="profile-label">{{ appStatusBarStyleLabel }}</div>
+			{{ appStatusBarStyle }}
+			<span class="profile-placeholder" v-if="!appStatusBarStyle">{{ selectStyle }}</span>
+			<select v-model="appStatusBarStyle">
+				<option value="{{ style }}" v-for="style in statusBarStyleType" :selected="!$index">{{ $index ? style : '-' }}</option>
+			</select>
 		</div>
 		<div class="profile-detail">
 			<div class="profile-tab">
@@ -163,13 +172,18 @@ export default {
 	.profile-label {
 		float: left;
 		color: #666;
-		width: 75px;
+		padding-right: 5px;
+		margin-right: 5px;
 		font-size: 14px;
 		position: relative;
+		.lang-en & {
+			min-width: 70px;
+		}
 		&::after {
 			content: "";
 			position: absolute;
-			right: 5px;
+			// right: 5px;
+			right: 0;
 			width: 1px;
 			height: 40%;
 			top: 50%;
@@ -212,6 +226,7 @@ export default {
 	}
 	.profile-placeholder {
 		color: #a5a5a5;
+		font-size: 14px;
 	}
 	.profile-detail {
 		input {
@@ -243,17 +258,23 @@ export default {
 				opacity: 0;
 			}
 		}
-		// select {
-		// 	float: left;
-		// 	margin: 0;
-		// 	padding: 0;
-		// 	border: 0;
-		// 	outline: 0;
-		// 	background: none;
-		// 	text-align: center;
-		// 	// width: 50px;
-		// 	margin-right: 3px;
-		// }
+		select {
+			position: absolute;
+			top: 0;
+			left: 0;
+			width: 100%;
+			height: 100%;
+			opacity: 0;
+			// float: left;
+			margin: 0;
+			padding: 0;
+			border: 0;
+			outline: 0;
+			// background: none;
+			// text-align: center;
+			// // width: 50px;
+			// margin-right: 3px;
+		}
 	}
 	.profile-tips {
 		text-align: center;
