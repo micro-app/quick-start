@@ -4,6 +4,7 @@ import {
 	mobile,
 	standalone,
 } from './user-agent.js';
+import { lang } from '../lang/';
 import tips from './tips.vue';
 import finish from './finish.vue';
 import topbar from './topbar.vue';
@@ -18,6 +19,7 @@ Vue.transition('fade', {
 });
 
 let history = [];
+let { className, landscapeTips } = lang.app;
 
 export default {
 	components : {
@@ -31,11 +33,11 @@ export default {
 	data () {
 		let img = new Image;
 		return {
-			mobile,
 			app : {
 				img,
 			},
 			standalone,
+			landscapeTips,
 			activePage : 'welcome',
 		}
 	},
@@ -48,11 +50,16 @@ export default {
 			this.activePage = history.pop();
 		},
 	},
+	computed : {
+		className () {
+			return `lang-${ className } ${ mobile ? 'device-mobile' : 'device-pc' }`;
+		},
+	},
 };
 </script>
 
 <template>
-	<div id="app" v-if="!standalone" :class="mobile ? 'device-mobile' : 'device-pc'">
+	<div id="app" v-if="!standalone" :class="className" :tips="landscapeTips">
 		<component
 			keep-alive
 			:app.sync="app"
@@ -108,6 +115,24 @@ export default {
 			min-height: 600px;
 			@media only screen and (max-width: 414px) {
 	            min-height: 480px;
+	        }
+		}
+		&.device-mobile {
+			@media only screen and (max-height: 414px) and (orientation : landscape) {
+				.app-page {
+					display: none;
+				}
+				&::after {
+					left: 0;
+					top: 50%;
+					width: 100%;
+					font-size: 18px;
+					color: $baseColor;
+					position: absolute;
+					text-align: center;
+					content: attr(tips);
+					transform: translateY(-50%);
+				}
 	        }
 		}
 	    .app-button {
