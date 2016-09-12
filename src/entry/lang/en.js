@@ -1,4 +1,8 @@
 exports.en = {
+    app : {
+        className : 'en',
+        landscapeTips : 'Please rotate your device to portrait mode.',
+    },
     topbar : {
         back : 'Back',
     },
@@ -16,13 +20,15 @@ exports.en = {
         appNameLabel : 'AppName',
         appLinkLabel : 'AppLink',
         appIconLabel : 'AppIcon',
+        appStatusBarStyleLabel : 'AppStatusBarStyle',
         appNamePlaceholder : 'Example',
         appLinkPlaceholder : 'http://www.example.com',
         appIconPlaceholder : 'http://www.example.com/img.jpg',
         WebIcon : 'Web',
         LocalIcon : 'Local',
         selectIcon : 'Please select icon',
-        tips : 'Icon request fail, please select another',
+        selectStyle : 'Please select style',
+        tips : 'Icon request fail, please select another.',
     },
     install : {
         button : 'INSTALL',
