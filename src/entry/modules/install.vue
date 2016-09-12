@@ -1,10 +1,12 @@
 <script>
 import { lang } from '../lang/';
+import { cliper } from  './cliper.js';
 
 let { button } = lang.install;
 
 let canvas;
 let context;
+let rotation;
 
 export default {
 	props : [
@@ -14,27 +16,15 @@ export default {
 		return {
 			button,
 			size : 180,
-			x : 0,
-			y : 0,
-			width : 0,
-			height : 0,
-			delta : {
-				scale : 1,
-				rotate : 0,
-				translateX : 0,
-				translateY : 0,
-			},
-			origin : {
-				scale : 1,
-				rotate : 0,
-				translateX : 0,
-				translateY : 0,
-			},
 		}
 	},
 	ready () {
 		canvas = this.$els.canvas;
 		context = canvas.getContext('2d');
+		cliper.init({
+			canvas,
+			context,
+		});
 		this.init();
 		this.$on('enter:install', this.init.bind(this));
 	},
@@ -43,7 +33,7 @@ export default {
 			microApp.capable = true;
 			microApp.href = this.app.href;
 			microApp.title = this.app.title;
-			microApp.statusBarStyle = 'black-translucent';
+			microApp.statusBarStyle = this.app.statusBarStyle;
 			if (/^data:image/.test(this.app.icon)) {
 				microApp.icon = this.app.icon;
 			} else {
@@ -52,71 +42,31 @@ export default {
             this.$parent.show('finish');
         },
 		init () {
-			let img = this.app.img;
-			let size = this.size;
-			this.x = 0;
-			this.y = 0;
-			this.width = img.width;
-			this.height = img.height;
-			let delta = this.delta;
-			let origin = this.origin;
-			delta.scale = 1;
-			delta.rotate = delta.translateX = delta.translateY = origin.rotate = origin.translateX = origin.translateY = 0;
-			if (img.width > img.height) {
-				this.x = (img.height - img.width) / 2;
-				this.origin.scale = size / img.height;
-			} else {
-				this.y = (img.width - img.height) / 2;
-				this.origin.scale = size / img.width;
-			}
-			this.render();
-		},
-		render () {
-			context.clearRect(0, 0, canvas.width, canvas.height);
-			this.applyTransform();
-			context.drawImage(this.app.img, this.x, this.y, this.width, this.height);
-			this.resetTransform();
-		},
-		applyTransform () {
-			let scale = this.origin.scale * this.delta.scale;
-			let translateX = (this.origin.translateX + this.delta.translateX) * this.origin.scale;
-			let translateY = (this.origin.translateY + this.delta.translateY) * this.origin.scale;
-			context.translate(translateX, translateY);
-			context.scale(scale, scale);
-			context.rotate(0);
-		},
-		resetTransform () {
-			let scale = 1 / this.origin.scale / this.delta.scale;
-			let translateX = (this.origin.translateX + this.delta.translateX) * this.origin.scale;
-			let translateY = (this.origin.translateY + this.delta.translateY) * this.origin.scale;
-			context.rotate(0);
-			context.scale(scale, scale);
-			context.translate(-translateX, -translateY);
+			cliper.reset(this.app.img);
 		},
 		panend ( event ) {
-			this.delta.translateX = 0;
-			this.delta.translateY = 0;
-			this.origin.translateX += event.deltaX;
-			this.origin.translateY += event.deltaY;
-			this.render();
-			// TODO: image clip
+			cliper.deltaX = event.deltaX;
+			cliper.deltaY = event.deltaY;
+			cliper.save();
+			cliper.render();
 		},
 		panmove ( event ) {
-			this.delta.translateX = event.deltaX;
-			this.delta.translateY = event.deltaY;
-			this.render();
-		},
-		pinch ( event ) {
-			console.log('pinch', event);
+			cliper.deltaX = event.deltaX;
+			cliper.deltaY = event.deltaY;
+			cliper.render();
 		},
 		pinchend ( event ) {
-			console.log('pinchend', event);
+			cliper.scale = event.scale;
+			cliper.rotation = event.rotation - rotation;
+			cliper.render();
 		},
 		pinchmove ( event ) {
-			console.log('pinchmove', event);
+			cliper.scale = event.scale;
+			cliper.rotation = event.rotation - rotation;
+			cliper.render();
 		},
-		rotate ( event ) {
-			console.log('rotate', event);
+		pinchstart ( event ) {
+			rotation = event.rotation;
 		},
     },
 };
@@ -124,13 +74,20 @@ export default {
 
 <template>
 	<div class="app-page install">
-        <div class="install-icon">
-            <canvas
+		<div class="install-box">
+			<div class="install-icon">
+				<canvas
 				v-el:canvas
 				width="{{ size }}"
 				height="{{ size }}"
-			></canvas>
-        </div>
+				v-touch:panend="panend"
+				v-touch:panmove="panmove"
+				v-touch:pinchend="pinchend"
+				v-touch:pinchmove="pinchmove"
+				v-touch:pinchstart="pinchstart"
+				></canvas>
+			</div>
+		</div>
         <div class="app-button"
             v-action:active
             v-touch:tap="tap"
@@ -149,6 +106,14 @@ export default {
                 pointer-events: auto;
             }
         }
+	}
+	.install-box {
+		height: 0;
+		width: 100%;
+		height: 100%;
+		margin: 0 auto;
+		max-width: 480px;
+		position: relative;
 	}
     .install-icon {
         position: absolute;
