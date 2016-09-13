@@ -34,7 +34,7 @@ export default {
 			let app = this.app;
 			app.href = this.appLink ? this.appLink : null;
 			app.title = this.appName ? this.appName : null;
-			app.statusBarStyle = this.statusBarStyle ? this.statusBarStyle : null;
+			app.statusBarStyle = this.appStatusBarStyle ? this.appStatusBarStyle : null;
             if (this.appIconType == 'web') {
 				app.icon = this.appIcon ? this.appIcon : defaultIcon;
             }

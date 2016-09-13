@@ -6,11 +6,15 @@ import VueHref from './modules/vue-href.js';
 import VueAction from './modules/vue-action.js';
 
 import app from './modules/app.vue';
-import { standalone } from './modules/user-agent.js';
+import icon from './img/apple-touch-icon.png';
 
-if (!standalone) {
-    location.hash = '';
-}
+// import { standalone } from './modules/user-agent.js';
+
+// if (!standalone) {
+// }
+location.hash = '';
+
+microApp.icon = icon;
 
 Vue.use(VueHref);
 Vue.use(VueTouch);
