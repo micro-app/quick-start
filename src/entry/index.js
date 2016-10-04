@@ -5,13 +5,9 @@ import VueTouch from 'vue-touch';
 import VueHref from './modules/vue-href.js';
 import VueAction from './modules/vue-action.js';
 
-import app from './modules/app.vue';
+import app from './components/app.vue';
 import icon from './img/apple-touch-icon.png';
 
-// import { standalone } from './modules/user-agent.js';
-
-// if (!standalone) {
-// }
 location.hash = '';
 
 microApp.icon = icon;
