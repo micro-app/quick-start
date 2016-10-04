@@ -4,7 +4,7 @@ module.exports = function ( Vue ) {
         },
         update : function () {
             if (this.arg == 'active') {
-                var className = 'is-active';
+                let className = 'is-active';
                 this.el.addEventListener('touchstart', function () {
                     this.classList.add(className);
                 }, false);
