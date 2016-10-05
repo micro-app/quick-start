@@ -1,16 +1,20 @@
 <script>
-import { lang } from '../lang/';
+import { lang } from '../modules/lang.js';
 
-let { back } = lang.topbar;
+const topbar_back = {
+	en : 'Back',
+	zh : '返回',
+};
+
 let github = 'https://github.com/micro-app/micro-app';
 let twitter = 'https://twitter.com/qq393464140';
 
 export default {
 	data () {
 		return {
-			back,
             github,
             twitter,
+			back : topbar_back[lang],
 		}
 	},
 	methods : {
