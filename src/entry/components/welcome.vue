@@ -1,26 +1,33 @@
 <script>
-import { lang } from '../lang/';
+import { lang } from '../modules/lang.js';
 import {
     mobile,
     safari,
-} from './user-agent.js';
+} from '../modules/user-agent.js';
 
-let {
-    desc,
-    tips,
-    button,
- } = lang.welcome;
+const welcome_desc = {
+     en : 'Create your Web App any time.',
+     zh : '一款轻应用构建工具',
+};
+const welcome_button = {
+     en : 'START',
+     zh : '立刻体验',
+};
+const welcome_tips = {
+     en : 'Support Safari Only',
+     zh : '仅支持Safari',
+};
 
 let tipsTimeout = 0;
 
 export default {
 	data () {
 		return {
-			desc,
-            tips,
-			button,
             mobile,
             showTips : false,
+            desc : welcome_desc[lang],
+            tips : welcome_tips[lang],
+            button : welcome_button[lang],
 		}
 	},
 	methods : {
@@ -129,13 +136,13 @@ export default {
             height: 120px;
             line-height: 120px;
             font-size: 80px;
-            margin-top: 30px + 15;
+            margin-top: 30px + 8;
         }
         .welcome-title {
             height: 44px;
             line-height: 44px;
             font-size: 36px;
-            margin-top: 25px + 15;
+            margin-top: 25px;
         }
         .welcome-desc {
             height: 30px;
