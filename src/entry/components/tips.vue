@@ -1,12 +1,15 @@
 <script>
-import { lang } from '../lang/';
+import { lang } from '../modules/lang.js';
 
-let { title } = lang.tips;
+const tips_title = {
+	en : 'Please open the link in Safari.',
+	zh : '请用Safari浏览器打开链接',
+};
 
 export default {
 	data () {
 		return {
-			title,
+			title : tips_title[lang],
 		}
 	},
 };
