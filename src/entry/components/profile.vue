@@ -1,51 +1,129 @@
 <script>
-import { lang } from '../lang/';
+import { lang } from '../modules/lang.js';
+import { space } from '../modules/space.js';
 import defaultIcon from '../img/default.jpg';
-// import defaultIcon from '../img/safari.png';
+
+const profile_title = {
+	en : 'Web App Profile',
+	zh : '创建您的轻应用',
+};
+const profile_button = {
+	en : 'CREATE',
+	zh : '创建',
+};
+const profile_appNameLabel = {
+	en : 'AppName',
+	zh : '应用名称',
+};
+const profile_appLinkLabel = {
+	en : 'AppLink',
+	zh : '应用地址',
+};
+const profile_appIconLabel = {
+	en : 'AppIcon',
+	zh : '应用图标',
+};
+const profile_appStatusBarStyleLabel = {
+	en : 'AppStatusBarStyle',
+	zh : '状态栏样式',
+};
+const profile_appNamePlaceholder = {
+	en : 'Example',
+	zh : 'Example',
+};
+const profile_appLinkPlaceholder = {
+	en : 'http://www.example.com',
+	zh : 'http://www.example.com',
+};
+const profile_appIconPlaceholder = {
+	en : 'http://www.example.com/img.jpg',
+	zh : 'http://www.example.com/img.jpg',
+};
+const profile_WebIcon = {
+	en : 'Web',
+	zh : '网络图标',
+};
+const profile_LocalIcon = {
+	en : 'Local',
+	zh : '本地图标',
+};
+const profile_selectIcon = {
+	en : 'Please select icon',
+	zh : '请选择图片',
+};
+const profile_selectStyle = {
+	en : 'Please select style',
+	zh : '请选择样式',
+};
+const profile_tips = {
+	en : 'Icon request fail, please select another.',
+	zh : '图标请求失败，请重新输入',
+};
+
+let tipsTimeout = 0;
+let loadingImage;
 
 export default {
-	props : [
-		'app'
-	],
 	data () {
-		let profile = JSON.parse(JSON.stringify(lang.profile));
+		// let profile = JSON.parse(JSON.stringify(lang.profile));
 		// profile.appName = profile.appLinkProtocol = profile.appLinkAddress = profile.appIconType = profile.appIconProtocol = profile.appIconAddress = profile.appIconFilePath = profile.appIconBase64 = '';
+		let profile = {};
+		profile.title = profile_title[lang];
+		profile.button = profile_button[lang];
+		profile.appNameLabel = profile_appNameLabel[lang];
+		profile.appLinkLabel = profile_appLinkLabel[lang];
+		profile.appIconLabel = profile_appIconLabel[lang];
+		profile.appStatusBarStyleLabel = profile_appStatusBarStyleLabel[lang];
+		profile.appNamePlaceholder = profile_appNamePlaceholder[lang];
+		profile.appLinkPlaceholder = profile_appLinkPlaceholder[lang];
+		profile.appIconPlaceholder = profile_appIconPlaceholder[lang];
+		profile.WebIcon = profile_WebIcon[lang];
+		profile.LocalIcon = profile_LocalIcon[lang];
+		profile.selectIcon = profile_selectIcon[lang];
+		profile.selectStyle = profile_selectStyle[lang];
+		profile.tips = profile_tips[lang];
 		profile.appName = profile.appLink = profile.appStatusBarStyle = profile.appIcon = profile.appIconType = profile.appIconFilePath = profile.appIconBase64 = '';
 		profile.statusBarStyleType = ['', 'white', 'black', 'black-translucent'];
 		profile.error = false;
 		return profile;
 	},
-	ready () {
-		this.app.img.onload = () => {
-			this.error = false;
-			this.$parent.show('install');
-		};
-		this.app.img.onerror = () => {
-			this.error = true;
-			setTimeout(() => {
-				this.error = false;
-			}, 2500);
-		};
-	},
 	methods : {
 		tap () {
-			// // app.href = this.appLinkAddress ? this.appLinkProtocol + this.appLinkAddress : null;
-			// app.icon = this.appIconAddress ? this.appIconProtocol + this.appIconAddress : defaultIcon;
-			let app = this.app;
-			app.href = this.appLink ? this.appLink : null;
-			app.title = this.appName ? this.appName : null;
-			app.statusBarStyle = this.appStatusBarStyle ? this.appStatusBarStyle : null;
+			space.href = this.appLink ? this.appLink : null;
+			space.title = this.appName ? this.appName : null;
+			space.statusBarStyle = this.appStatusBarStyle ? this.appStatusBarStyle : null;
             if (this.appIconType == 'web') {
-				app.icon = this.appIcon ? this.appIcon : defaultIcon;
+				space.icon = this.appIcon ? this.appIcon : defaultIcon;
             }
             if (this.appIconType == 'local') {
-                app.icon = this.appIconFilePath ? this.appIconBase64 : defaultIcon;
+                space.icon = this.appIconFilePath ? this.appIconBase64 : defaultIcon;
             }
-			if (app.img.src === app.icon) {
-				this.$parent.show('install');
-			} else {
-				app.img.src = app.icon;
+			if (space.img) {
+				if (space.img.src === space.icon) {
+					this.$parent.show('install');
+					// console.log('same');
+					return;
+				}
 			}
+			let img = new Image;
+			img.onload = () => {
+				space.img = img;
+				this.error = false;
+				loadingImage = null;
+				this.$parent.show('install');
+			};
+			img.onerror = () => {
+				this.error = true;
+				clearTimeout(tipsTimeout);
+				tipsTimeout = setTimeout(() => {
+					this.error = false;
+				}, 2500);
+			};
+			if (loadingImage) {
+				loadingImage.onload = loadingImage.onerror = null;
+			}
+			loadingImage = img;
+			img.src = space.icon;
 		},
 		focus ( event, id ) {
 		    let target = event.target;
@@ -68,15 +146,6 @@ export default {
 		},
 	},
 };
-
-// <select v-model="appLinkProtocol">
-// 	<option value="http://" selected>http://</option>
-// 	<option value="https://">https://</option>
-// </select>
-// <select v-model="appIconProtocol">
-// 	<option value="http://" selected>http://</option>
-// 	<option value="https://">https://</option>
-// </select>
 </script>
 
 <template>
