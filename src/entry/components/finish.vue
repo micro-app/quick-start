@@ -1,18 +1,25 @@
 <script>
-import { lang } from '../lang/';
+import { lang } from '../modules/lang.js';
 
-let {
-    title,
-    step1,
-    step2,
-} = lang.finish;
+const finish_title = {
+    en : 'Final Step',
+    zh : '最后一步',
+};
+const finish_step1 = {
+    en : 'Click on the share button at the bottom.',
+    zh : '点击底部的分享按钮',
+};
+const finish_step2 = {
+    en : 'Then choose the Add to Home Screen icon and click.',
+    zh : '选择添加到主屏幕',
+};
 
 export default {
 	data () {
 		return {
-            title,
-            step1,
-            step2,
+            title : finish_title[lang],
+            step1 : finish_step1[lang],
+            step2 : finish_step2[lang],
 		}
 	},
 };
@@ -31,6 +38,7 @@ export default {
     $activeColor : #2485E3;
 	.finish {
 		z-index: 4;
+        pointer-events: none;
         &:not(.fade-leave) ~ .topbar {
             .topbar-back {
                 opacity: 1;
