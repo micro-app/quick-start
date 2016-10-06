@@ -3,8 +3,8 @@ import Vue from 'vue';
 import {
 	mobile,
 	standalone,
-} from './user-agent.js';
-import { lang } from '../lang/';
+} from '../modules/user-agent.js';
+import { lang } from '../modules/lang.js';
 import tips from './tips.vue';
 import finish from './finish.vue';
 import topbar from './topbar.vue';
@@ -12,14 +12,22 @@ import install from './install.vue';
 import profile from './profile.vue';
 import welcome from './welcome.vue';
 
+const app_className = {
+	en : 'en',
+	zh : 'zh',
+};
+const app_landscapeTips = {
+	en : 'Please rotate your device to portrait mode.',
+	zh : '请在竖屏下操作',
+};
+
 Vue.transition('fade', {
 	enter () {
-		this.$broadcast('enter:' + this.activePage);
+		this.$broadcast('enter:' + this.currentPage);
 	},
 });
 
 let history = [];
-let { className, landscapeTips } = lang.app;
 
 export default {
 	components : {
@@ -33,26 +41,23 @@ export default {
 	data () {
 		let img = new Image;
 		return {
-			app : {
-				img,
-			},
 			standalone,
-			landscapeTips,
-			activePage : 'welcome',
+			currentPage : 'welcome',
+			landscapeTips : app_landscapeTips[lang],
 		}
 	},
 	methods : {
 		show ( page ) {
-			history.push(this.activePage);
-			this.activePage = page;
+			history.push(this.currentPage);
+			this.currentPage = page;
 		},
 		back () {
-			this.activePage = history.pop();
+			this.currentPage = history.pop();
 		},
 	},
 	computed : {
 		className () {
-			return `lang-${ className } ${ mobile ? 'device-mobile' : 'device-pc' }`;
+			return `lang-${ app_className[lang] } ${ mobile ? 'device-mobile' : 'device-pc' }`;
 		},
 	},
 };
@@ -62,8 +67,7 @@ export default {
 	<div id="app" v-if="!standalone" :class="className" :tips="landscapeTips">
 		<component
 			keep-alive
-			:app.sync="app"
-			:is="activePage"
+			:is="currentPage"
 			transition="fade"
 		></component>
 		<topbar></topbar>
@@ -142,7 +146,7 @@ export default {
 	        background: $baseColor;
 	        cursor: pointer;
 	        color: #fff;
-	        bottom: 90px;
+	        bottom: 80px;
 	        padding: 0 12px + 3;
 	        height: 42px + 12;
 	        line-height: 42px + 12;
@@ -150,7 +154,7 @@ export default {
 	        border-radius: 5px + 2;
 			@media only screen and (max-width: 414px) {
 				& {
-					bottom: 40px;
+					bottom: 30px + 3;
 					padding: 0 12px;
 					height: 42px;
 					line-height: 42px;
