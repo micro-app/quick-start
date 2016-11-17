@@ -57,4 +57,4 @@ clipper.render = function () {
     context.translate(-translateX, -translateY);
 };
 
-exports.clipper = clipper;
+export default clipper;
