@@ -1,49 +1,51 @@
 <script>
-import { lang } from '../modules/lang.js';
 import {
-    mobile,
-    safari,
+	mobile,
+	language,
 } from '../modules/user-agent.js';
 
-const welcome_desc = {
+const lang = language;
+
+const desc = ({
      en : 'Create your Web App any time.',
      zh : '一款轻应用构建工具',
-};
-const welcome_button = {
+})[lang];
+const button = ({
      en : 'START',
      zh : '立刻体验',
-};
-const welcome_tips = {
+})[lang];
+const tips = ({
      en : 'Support Safari Only',
      zh : '仅支持Safari',
-};
+})[lang];
 
 let tipsTimeout = 0;
 
 export default {
 	data () {
 		return {
-            mobile,
-            showTips : false,
-            desc : welcome_desc[lang],
-            tips : welcome_tips[lang],
-            button : welcome_button[lang],
-		}
+            desc,
+            tips,
+            button,
+			mobile,
+			tipsSwitch : false,
+		};
 	},
 	methods : {
         tap () {
-            if (safari) {
-                this.$parent.show('profile');
-            } else {
-                this.$parent.show('tips');
-            }
+			this.$router.go({
+				path : '/profile',
+			});
 		},
-        click () {
-            clearTimeout(tipsTimeout);
-			this.showTips = true;
-            tipsTimeout = setTimeout(() => {
-                this.showTips = false;
-            }, 2500);
+		click () {
+			this.showTips();
+		},
+		showTips () {
+			clearTimeout(tipsTimeout);
+			this.tipsSwitch = true;
+			tipsTimeout = setTimeout(() => {
+				this.tipsSwitch = false;
+			}, 2500);
 		},
 	},
 };
@@ -54,27 +56,23 @@ export default {
         <div class="welcome-slogon">
             <div class="welcome-logo">L</div>
             <div class="welcome-title">micro-app</div>
-            <div class="welcome-desc">{{ desc }}</div>
+            <div class="welcome-desc">{{* desc }}</div>
         </div>
-        <div class="welcome-tips" v-if="!mobile" v-show="showTips" transition="fade">{{ tips }}</div>
+		<div class="welcome-tips" transition="fade" v-show="tipsSwitch">{{* tips }}</div>
 		<div class="app-button"
 		 	v-if="mobile"
             v-action:active
 			v-touch:tap="tap"
-		>{{ button }}</div>
+		>{{* button }}</div>
 		<div class="app-button"
 			v-if="!mobile"
 		 	v-on:click="click"
-		>{{ button }}</div>
+		>{{* button }}</div>
 	</div>
 </template>
 
 <style lang="scss">
-    $baseColor : #3995EE;
-    $activeColor : #2485E3;
-    .welcome {
-        z-index: 1;
-    }
+    @import "../sass/_variable.scss";
     .welcome-slogon {
         width: 100%;
         min-width: 414px;
@@ -122,13 +120,7 @@ export default {
         height: 45px;
         line-height: 45px;
         bottom: 40px;
-        &.fade-transition {
-            transition: opacity 300ms linear;
-        }
-        &.fade-enter,
-        &.fade-leave {
-            opacity: 0;
-        }
+		pointer-events: none;
     }
     @media only screen and (max-width: 414px) {
         .welcome-logo {
@@ -163,5 +155,4 @@ export default {
             margin-top: 25px;
         }
     }
-
 </style>
