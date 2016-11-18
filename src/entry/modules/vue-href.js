@@ -1,11 +1,21 @@
-module.exports = function ( Vue ) {
+export default function ( Vue ) {
     Vue.directive('href', {
-        bind : function () {
+        bind () {
+            function onclick () {
+                if (onclick.href) {
+                    location.href = onclick.href;
+                }
+            };
+            onclick.href = null;
+            this.el.addEventListener('click', onclick, false);
+            this.update = this.update.bind(this, onclick);
+            this.unbind = this.unbind.bind(this, onclick);
         },
-        update : function ( href ) {
-            this.el.addEventListener('click', function () {
-                location.href = href;
-            }, false);
+        update ( onclick, value ) {
+            onclick.href = value;
+        },
+        unbind ( onclick ) {
+            this.el.removeEventListener('click', onclick, false);
         },
     });
 };
