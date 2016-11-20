@@ -66,10 +66,10 @@ export default {
     .clipper {
         position: relative;
         z-index: 1;
-        top: 50px + 15 + 50 + 10;
+        top: 50px;
         @media only screen and (max-width: 414px) {
             & {
-                top: 36px + 15 + 50 + 10;
+                top: 36px;
             }
         }
     }
@@ -78,10 +78,24 @@ export default {
         width: 80%;
         padding-top: 80%;
         top: 0;
-        left: 50%;
-        transform: translateX(-50%);
+        left: 0%;
+        transform: translateX(12.5%) translateY(15px + 50 + 10);
         overflow: hidden;
         border-radius: 15%;
+		background-color: #fdfdfd;
+		margin-left: 0;
+		.pwa + .clipper & {
+			pointer-events: none;
+			transform-origin: 0% 0%;
+			transform: translateX(25px) translateY(25px) scale(.4);
+			transition: transform 350ms linear;
+			&::after {
+			    background-image: none;
+			}
+		}
+		&.fade-transition.fade-leave {
+			transition: opacity 0ms linear;
+		}
         canvas,
         &::after {
             position: absolute;
