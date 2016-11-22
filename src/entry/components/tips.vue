@@ -1,16 +1,20 @@
 <script>
-import { lang } from '../modules/lang.js';
+import {
+	language,
+} from '../modules/user-agent.js';
 
-const tips_title = {
-	en : 'Please open the link in Safari.',
-	zh : '请用Safari浏览器打开链接',
-};
+const lang = language;
+
+const title = ({
+	en : 'Please use Safari browser.',
+	zh : '请用 Safari 浏览器体验',
+})[lang];
 
 export default {
 	data () {
 		return {
-			title : tips_title[lang],
-		}
+			title,
+		};
 	},
 };
 </script>
@@ -18,18 +22,18 @@ export default {
 <template>
 	<div class="app-page tips">
 		<div class="tips-browser"></div>
-		<div class="tips-title">{{ title }}</div>
+		<div class="tips-title">{{* title }}</div>
 	</div>
 </template>
 
 <style lang="scss">
 	.tips {
-		z-index: 2;
+		pointer-events: none;
 	}
 	.tips-browser {
 		width: 80px;
 		height: 80px;
-		margin: 50px auto 0;
+		margin: 40% auto 0;
 		background-size: 100% 100%;
 		background-repeat: no-repeat;
 		background-image: url(../img/safari.png);
