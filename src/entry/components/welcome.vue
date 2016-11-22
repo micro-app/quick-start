@@ -15,8 +15,8 @@ const button = ({
      zh : '立刻体验',
 })[lang];
 const tips = ({
-     en : 'Support Safari Only',
-     zh : '仅支持Safari',
+	en : 'Please use Safari browser.',
+	zh : '请用 Safari 浏览器体验',
 })[lang];
 
 let tipsTimeout = 0;
@@ -104,6 +104,7 @@ export default {
         line-height: 44px + 20;
         font-size: 36px + 20;
         margin-top: 50px;
+		font-weight: 700;
     }
     .welcome-desc {
         height: 30px + 20;
@@ -115,11 +116,12 @@ export default {
         left: 50%;
         transform: translateX(-50%);
         text-align: center;
-        font-size: 16px;
+        font-size: 18px;
         color: #e96900;
         height: 45px;
         line-height: 45px;
-        bottom: 40px;
+        // bottom: 40px;
+        bottom: 80px + 54 + 15;
 		pointer-events: none;
     }
     @media only screen and (max-width: 414px) {
@@ -144,7 +146,8 @@ export default {
         .welcome-tips {
             height: 25px;
             line-height: 25px;
-            bottom: 10px;
+            // bottom: 10px;
+            bottom: 30px - 2 + 42 + 15;
         }
     }
     @media only screen and (max-width: 320px) {
