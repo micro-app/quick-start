@@ -1,147 +1,225 @@
 <script>
-import { lang } from '../modules/lang.js';
-import { space } from '../modules/space.js';
-import defaultIcon from '../img/default.jpg';
+import {
+	language,
+} from '../modules/user-agent.js';
+import clipper from  '../modules/clipper.js';
 
-const profile_title = {
+const lang = language;
+
+const title = ({
 	en : 'Web App Profile',
 	zh : '创建您的轻应用',
-};
-const profile_button = {
-	en : 'CREATE',
-	zh : '创建',
-};
-const profile_appNameLabel = {
+})[lang];
+const backButton = ({
+	en : 'BACK',
+	zh : '上一步',
+})[lang];
+const nextButton = ({
+	en : 'NEXT',
+	zh : '下一步',
+})[lang];
+const appNameLabel = ({
 	en : 'AppName',
 	zh : '应用名称',
-};
-const profile_appLinkLabel = {
+})[lang];
+const appLinkLabel = ({
 	en : 'AppLink',
 	zh : '应用地址',
-};
-const profile_appIconLabel = {
+})[lang];
+const appIconLabel = ({
 	en : 'AppIcon',
 	zh : '应用图标',
-};
-const profile_appStatusBarStyleLabel = {
+})[lang];
+const appStatusBarStyleLabel = ({
 	en : 'AppStatusBarStyle',
 	zh : '状态栏样式',
-};
-const profile_appNamePlaceholder = {
-	en : 'Example',
-	zh : 'Example',
-};
-const profile_appLinkPlaceholder = {
-	en : 'http://www.example.com',
-	zh : 'http://www.example.com',
-};
-const profile_appIconPlaceholder = {
-	en : 'http://www.example.com/img.jpg',
-	zh : 'http://www.example.com/img.jpg',
-};
-const profile_WebIcon = {
+})[lang];
+const appNamePlaceholder = 'Example';
+const appLinkPlaceholder = 'http://example.com';
+const appIconPlaceholder = 'http://example.com/pic.jpg';
+const webIcon = ({
 	en : 'Web',
 	zh : '网络图标',
-};
-const profile_LocalIcon = {
+})[lang];
+const localIcon = ({
 	en : 'Local',
 	zh : '本地图标',
-};
-const profile_selectIcon = {
+})[lang];
+const selectIcon = ({
 	en : 'Please select icon',
-	zh : '请选择图片',
-};
-const profile_selectStyle = {
+	zh : '请选择图标',
+})[lang];
+const selectStyle = ({
 	en : 'Please select style',
 	zh : '请选择样式',
-};
-const profile_tips = {
+})[lang];
+const tips = ({
 	en : 'Icon request fail, please select another.',
 	zh : '图标请求失败，请重新输入',
-};
+})[lang];
+
+// const defaultBase64Value = '[object Base64]';
 
 let tipsTimeout = 0;
-let loadingImage;
+let appIconBase64;
+let appIconFilePath;
 
 export default {
 	data () {
-		// let profile = JSON.parse(JSON.stringify(lang.profile));
-		// profile.appName = profile.appLinkProtocol = profile.appLinkAddress = profile.appIconType = profile.appIconProtocol = profile.appIconAddress = profile.appIconFilePath = profile.appIconBase64 = '';
-		let profile = {};
-		profile.title = profile_title[lang];
-		profile.button = profile_button[lang];
-		profile.appNameLabel = profile_appNameLabel[lang];
-		profile.appLinkLabel = profile_appLinkLabel[lang];
-		profile.appIconLabel = profile_appIconLabel[lang];
-		profile.appStatusBarStyleLabel = profile_appStatusBarStyleLabel[lang];
-		profile.appNamePlaceholder = profile_appNamePlaceholder[lang];
-		profile.appLinkPlaceholder = profile_appLinkPlaceholder[lang];
-		profile.appIconPlaceholder = profile_appIconPlaceholder[lang];
-		profile.WebIcon = profile_WebIcon[lang];
-		profile.LocalIcon = profile_LocalIcon[lang];
-		profile.selectIcon = profile_selectIcon[lang];
-		profile.selectStyle = profile_selectStyle[lang];
-		profile.tips = profile_tips[lang];
-		profile.appName = profile.appLink = profile.appStatusBarStyle = profile.appIcon = profile.appIconType = profile.appIconFilePath = profile.appIconBase64 = '';
-		profile.statusBarStyleType = ['', 'white', 'black', 'black-translucent'];
-		profile.error = false;
-		return profile;
+		let data = {
+			backButton,
+			nextButton,
+			title,
+			appNameLabel,
+			appLinkLabel,
+			appIconLabel,
+			appStatusBarStyleLabel,
+			appNamePlaceholder,
+			appLinkPlaceholder,
+			appIconPlaceholder,
+			webIcon,
+			localIcon,
+			selectIcon,
+			selectStyle,
+			tips,
+			tipsSwitch : false,
+			appName : '',
+			appLink : '',
+			appStatusBarStyle : '',
+			appStatusBarStyleType : ['', 'white', 'black', 'black-translucent'],
+			appIcon : '',
+			appIconType : 'web',
+			appIconFilePath : '',
+			clipping : false,
+		};
+		let query = this.$route.query;
+		if (query.name) {
+			data.appName = query.name
+		}
+		if (query.link) {
+			data.appLink = query.link
+		}
+		if (query.icon) {
+			data.appIcon = query.icon;
+		}
+		if (this.$root.appIconBase64 && appIconFilePath) {
+			data.appIconType = 'local';
+			data.appIconFilePath = appIconFilePath;
+		}
+		return data;
+	},
+	ready () {
+		this.$root.clipping = false;
+		setTimeout(() => {
+			let query = this.$route.query;
+			if (query.style) {
+				this.appStatusBarStyle = query.style;
+			}
+		}, 0);
 	},
 	methods : {
-		tap () {
-			space.href = this.appLink ? this.appLink : null;
-			space.title = this.appName ? this.appName : null;
-			space.statusBarStyle = this.appStatusBarStyle ? this.appStatusBarStyle : null;
-            if (this.appIconType == 'web') {
-				space.icon = this.appIcon ? this.appIcon : defaultIcon;
-            }
-            if (this.appIconType == 'local') {
-                space.icon = this.appIconFilePath ? this.appIconBase64 : defaultIcon;
-            }
-			if (space.img) {
-				if (space.img.src === space.icon) {
-					this.$parent.show('install');
-					// console.log('same');
-					return;
+		go ( base64, icon ) {
+			let query = {};
+			if (this.appName) {
+				query.name = this.appName;
+			}
+			if (this.appLink) {
+				query.link = this.appLink;
+			}
+			if (this.appStatusBarStyle) {
+				query.style = this.appStatusBarStyle;
+			}
+			if (icon) {
+				query.icon = icon;
+			}
+			if (base64) {
+				appIconFilePath = this.appIconFilePath;
+				this.$root.appIconBase64 = clipper.canvas.toDataURL();
+			} else {
+				appIconFilePath = null;
+				this.$root.appIconBase64 = null;
+			}
+			this.$router.go({
+				path : '/pwa',
+				query,
+			});
+		},
+		back () {
+			this.clipping = this.$root.clipping = false;
+		},
+		next () {
+			if (this.clipping) {
+				// this.$root.clipping = false;
+				this.go(true);
+			} else {
+				if (this.appIconType == 'web') {
+					if (this.appIcon) {
+						let img = new Image;
+						img.onerror = () => {
+							this.showTips();
+						};
+						img.onload = () => {
+							this.go(false, img.src);
+						};
+						img.src = this.appIcon;
+					} else {
+						this.go();
+					}
+				} else {
+					if (this.appIconFilePath == appIconFilePath) {
+						this.clipIcon();
+					} else {
+						let file = this.$els.file.files[0];
+						if (file) {
+							let reader = new FileReader;
+							reader.onerror = () => {
+								this.showTips();
+							};
+							reader.onload = () => {
+								appIconBase64 = reader.result;
+								this.clipIcon();
+							};
+							reader.readAsDataURL(file);
+						} else {
+							this.go();
+						}
+					}
 				}
 			}
-			let img = new Image;
-			img.onload = () => {
-				space.img = img;
-				this.error = false;
-				loadingImage = null;
-				this.$parent.show('install');
-			};
-			img.onerror = () => {
-				this.error = true;
-				clearTimeout(tipsTimeout);
-				tipsTimeout = setTimeout(() => {
-					this.error = false;
-				}, 2500);
-			};
-			if (loadingImage) {
-				loadingImage.onload = loadingImage.onerror = null;
-			}
-			loadingImage = img;
-			img.src = space.icon;
 		},
-		focus ( event, id ) {
+		focus ( event ) {
 		    let target = event.target;
 		    if (target.tagName == 'SELECT' || target.tagName == 'INPUT') {
 		        return;
 		    }
-			this.$els[id.toLowerCase()].focus();
 			event.preventDefault();
+			let input = event.srcEvent.currentTarget.querySelector('input');
+			input && input.focus();
 		},
-		getFile ( event ) {
-			let self = this;
-			let file = event.target.files[0];
-			if (file) {
-				let reader = new FileReader();
-				reader.onload = function () {
-					self.appIconBase64 = this.result;
+		change ( event ) {
+			let target = event.target;
+			this.appIconFilePath = target.value;
+		},
+		showTips () {
+			clearTimeout(tipsTimeout);
+			this.tipsSwitch = true;
+			tipsTimeout = setTimeout(() => {
+				this.tipsSwitch = false;
+			}, 2500);
+		},
+		clipIcon () {
+			if (clipper.img && clipper.img.src == appIconBase64) {
+				this.clipping = this.$root.clipping = true;
+			} else {
+				let img = new Image;
+				img.onerror = () => {
+					this.showTips();
 				};
-				reader.readAsDataURL(file);
+				img.onload = () => {
+					clipper.reset(img);
+					this.clipping = this.$root.clipping = true;
+				};
+				img.src = appIconBase64;
 			}
 		},
 	},
@@ -150,63 +228,70 @@ export default {
 
 <template>
 	<div class="app-page profile">
-		<div class="profile-title">{{ title }}</div>
-		<div class="profile-detail" v-touch:tap="focus($event, 'appName')">
-			<div class="profile-label">{{ appNameLabel }}</div>
-			<div class="profile-main">
-				<input type="text" placeholder="{{ appNamePlaceholder }}" v-el:appName v-model="appName">
+		<div class="profile-title">{{* title }}</div>
+		<div v-show="!clipping" transition="fade">
+			<div class="profile-detail" v-touch:tap="focus($event)">
+				<div class="profile-label">{{* appNameLabel }}</div>
+				<div class="profile-main">
+					<input type="text" placeholder="{{* appNamePlaceholder }}" v-model="appName">
+				</div>
 			</div>
-		</div>
-		<div class="profile-detail" v-touch:tap="focus($event, 'appLink')">
-			<div class="profile-label">{{ appLinkLabel }}</div>
-			<div class="profile-main">
-				<input type="text" placeholder="{{ appLinkPlaceholder }}" v-el:appLink v-model="appLink">
+			<div class="profile-detail" v-touch:tap="focus($event)">
+				<div class="profile-label">{{* appLinkLabel }}</div>
+				<div class="profile-main">
+					<input type="text" placeholder="{{* appLinkPlaceholder }}" v-model="appLink">
+				</div>
 			</div>
-		</div>
-		<div class="profile-detail">
-			<div class="profile-label">{{ appStatusBarStyleLabel }}</div>
-			{{ appStatusBarStyle }}
-			<span class="profile-placeholder" v-if="!appStatusBarStyle">{{ selectStyle }}</span>
-			<select v-model="appStatusBarStyle">
-				<option value="{{ style }}" v-for="style in statusBarStyleType" :selected="!$index">{{ $index ? style : '-' }}</option>
-			</select>
-		</div>
-		<div class="profile-detail">
-			<div class="profile-tab">
-				<input type="radio" name="appIconType" v-model="appIconType" value="web" checked>
-				<div class="text">{{ WebIcon }}</div>
+			<div class="profile-detail">
+				<div class="profile-label">{{* appStatusBarStyleLabel }}</div>
+				{{ appStatusBarStyle }}
+				<span class="profile-placeholder" v-if="!appStatusBarStyle">{{* selectStyle }}</span>
+				<select v-model="appStatusBarStyle">
+					<option value="{{* style }}"
+						v-for="style in appStatusBarStyleType"
+						v-bind:selected="!$index"
+					>{{* $index ? style : '-' }}</option>
+				</select>
 			</div>
-			<div class="profile-tab">
-				<input type="radio" name="appIconType" v-model="appIconType" value="local">
-				<div class="text">{{ LocalIcon }}</div>
+			<div class="profile-detail">
+				<div class="profile-tab">
+					<input type="radio" name="appIconType" v-model="appIconType" value="web">
+					<div class="text">{{* webIcon }}</div>
+				</div>
+				<div class="profile-tab">
+					<input type="radio" name="appIconType" v-model="appIconType" value="local">
+					<div class="text">{{* localIcon }}</div>
+				</div>
 			</div>
-		</div>
-		<div class="profile-detail" v-show="appIconType == 'web'" v-touch:tap="focus($event, 'appIcon')">
-			<div class="profile-label">{{ appIconLabel }}</div>
-			<div class="profile-main">
-				<input type="text" placeholder="{{ appIconPlaceholder }}" v-el:appIcon v-model="appIcon">
+			<div class="profile-detail" v-touch:tap="(appIconType == 'web') && focus($event)">
+				<div class="profile-label">{{* appIconLabel }}</div>
+				<div class="profile-main" v-show="appIconType == 'web'">
+					<input type="text" placeholder="{{* appIconPlaceholder }}" v-model="appIcon">
+				</div>
+				<div class="profile-main overflow-visible" v-show="appIconType == 'local'">
+					<div class="overflow-ellipsis">
+						{{ appIconFilePath }}
+						<span class="profile-placeholder" v-if="!appIconFilePath">{{* selectIcon }}</span>
+					</div>
+					<input type="file" v-el:file v-on:change="change">
+				</div>
 			</div>
+			<div class="profile-tips" transition="fade" v-show="tipsSwitch">{{* tips }}</div>
 		</div>
-		<div class="profile-detail" v-show="appIconType == 'local'">
-			<div class="profile-label">{{ appIconLabel }}</div>
-			{{ appIconFilePath }}
-			<span class="profile-placeholder" v-if="!appIconFilePath">{{ selectIcon }}</span>
-			<input type="file" v-model="appIconFilePath" v-on:change="getFile($event)">
-		</div>
-		<div class="profile-tips" v-show="error" transition="fade">{{ tips }}</div>
-		<div class="app-button"
-			v-action:active
-			v-touch:tap="tap"
-		>{{ button }}</div>
+		<div v-action:active
+			v-show="clipping"
+			v-touch:tap="back"
+			v-bind:class="{ 'app-button' : true, 'is-left' : clipping }"
+		>{{* backButton }}</div>
+		<div v-action:active
+			v-touch:tap="next"
+			v-bind:class="{ 'app-button' : true, 'is-right' : clipping }"
+		>{{* nextButton }}</div>
 	</div>
 </template>
 
 <style lang="scss">
-	$baseColor : #3995EE;
-	$activeColor : #2485E3;
-    .profile {
-		z-index: 2;
-    }
+	@import "../sass/_variable.scss";
 	.profile-title {
 		height: 50px;
 		line-height: 50px;
@@ -222,11 +307,6 @@ export default {
 		overflow: hidden;
 		position: relative;
 		font-size: 16px;
-		text-overflow: ellipsis;
-		word-break: break-all;
-		word-wrap: break-word;
-		white-space: nowrap;
-		overflow: hidden;
 		&::after {
 			content: "";
 			position: absolute;
@@ -268,6 +348,9 @@ export default {
 			content: "";
 			clear: both;
 			display: table;
+		}
+		&.overflow-visible {
+		    overflow: visible;
 		}
 	}
 	.profile-tab {
@@ -351,12 +434,20 @@ export default {
 		line-height: 45px;
 		font-size: 16px;
 		color: #e96900;
-		&.fade-transition {
-			transition: opacity 300ms linear;
+	}
+	.overflow-ellipsis {
+		overflow: hidden;
+		white-space: nowrap;
+		word-wrap: break-word;
+		word-break: break-all;
+		text-overflow: ellipsis;
+	}
+	.app-button {
+		&.is-left {
+			margin-left: -65px;
 		}
-		&.fade-enter,
-		&.fade-leave {
-			opacity: 0;
+		&.is-right {
+			margin-left: 65px;
 		}
 	}
 </style>
