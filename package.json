@@ -1,7 +1,7 @@
 {
   "name": "quick-start",
-  "version": "0.0.1",
-  "description": "source of https://micro-app.github.io",
+  "version": "1.0.0",
+  "description": "source of https://micro-app.github.io.",
   "main": "",
   "scripts": {
     "dev": "node ./webpack/webpack.node.js -dev",
@@ -28,7 +28,8 @@
     "fs-extra": "^0.30.0",
     "inline-source": "^5.0.0",
     "inquirer": "^1.1.3",
-    "micro-app": "0.0.9",
+    "micro-app": "^1.0.1",
+    "micro-storage": "0.0.9",
     "minifycss-loader": "^0.2.0",
     "moment": "~2.8.3",
     "node-sass": "^3.7.0",
@@ -41,9 +42,10 @@
     "vue-hot-reload-api": "^1.3.2",
     "vue-html-loader": "^1.2.2",
     "vue-loader": "^8.5.2",
+    "vue-router": "^0.7.13",
     "vue-style-loader": "^1.0.0",
     "vue-touch": "^1.1.0",
-    "webpack": "^1.13.1",
-    "webpack-dev-server": "^1.14.1"
+    "webpack": "^1.13.2",
+    "webpack-dev-server": "^1.16.2"
   }
 }
