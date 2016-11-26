@@ -7,6 +7,12 @@ const userAgent = navigator.userAgent;
 export const mobile = /Android|webOS|iPhone|Windows Phone|iPod|iPad|BlackBerry|SymbianOS/i.test(userAgent);
 
 /**
+ * The device is ipad or not
+ * @type {Boolean} pad
+ */
+export const pad = /iPad/i.test(userAgent);
+
+/**
  * The browser is safari or not
  * @type {Boolean} safari
  */
