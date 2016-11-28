@@ -56,6 +56,13 @@ module.exports = {
     },
     plugins : [
         new ExtractText('css/[name].css'),
+        new webpack.DefinePlugin({
+            'process.env': {
+                EXAMPLE_NAME : '"Example"',
+                EXAMPLE_LINK : '"http://example.com"',
+                EXAMPLE_ICON : '"http://example.com/pic.jpg"',
+            },
+        }),
     ],
     vue : {
         loaders : {

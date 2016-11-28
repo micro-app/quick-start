@@ -34,6 +34,8 @@ let start = () => {
         cmd = 'webpack --progress --colors --config ./webpack/webpack.build.js';
         if (process.argv[3] && process.argv[3] == 'js') {
             step3().then(step7).then(step8).then(( option ) => cmd += option).then(step1).then(step4).then(() => {
+                cmd += ' --uglify';
+            }).then(step4).then(() => {
                 console.log('build complete!'.green);
             }).catch((err) => {
                 console.log(err.toString().red);
@@ -149,7 +151,7 @@ let step5 = () => new Promise(( resolve, reject ) => {
                                 source.tag = 'style';
                                 source.content = source.fileContent.replace(/url\(.*?\)/g, function ( match ) {
                                     let url = match.substring(0, match.length - 1).substring(4);
-                                    if (/^http(s?):\/\/|data:image/.test(url)) {
+                                    if (/^http(s?):\/\/|^data:image/.test(url)) {
                                         return match;
                                     } else {
                                         if (url.indexOf('?')) {
