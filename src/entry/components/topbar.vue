@@ -1,7 +1,7 @@
 <script>
 import {
 	language,
-} from '../modules/user-agent.js';
+} from '../modules/variable.js';
 
 const lang = language;
 
