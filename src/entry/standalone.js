@@ -18,27 +18,36 @@ if (navigator.standalone) {
             location.reload();
         }
     }, false);
-    let anchor = document.createElement('a');
     function redirect ( event ) {
+        let anchor = document.createElement('a');
+        let link = process.env.EXAMPLE_LINK;
         let data = {};
-        data.originHash = '';
+        data.hash = '';
+        data.query = {};
+        data.timing = {};
         data.type = event.type;
         data.version = '@VERSION';
-        data.onRedirect = +new Date;
-        data.timing = {};
+        data.timeStamp = +new Date;
         data.lastUpdate = store('last-update');
-        try {
-            anchor.href = decodeURIComponent((location.hash.split('?')[1]).match(/(?:^|&)link=(.*?)($|&)/)[1]);
-        } catch (e) {
-            anchor.href = 'http://example.com';
-        }
         for (let key in performance.timing) {
             data.timing[key] = performance.timing[key];
         }
+        (location.hash.split('?')[1]||'').split('&').forEach(( param ) => {
+            let temp = param.split('=');
+            let key = temp[0];
+            let value = decodeURIComponent(temp[1] || '');
+            if (key == 'link') {
+                link = value;
+            } else {
+                data.query[key] = value;
+            }
+        });
+        anchor.href = link;
         if (anchor.hash && anchor.hash.length > 1) {
-            data.originHash = anchor.hash.slice(1);
+            data.hash = decodeURIComponent(anchor.hash.slice(1));
         }
         anchor.hash = `${ namespace }=${ encodeURIComponent(JSON.stringify(data)) }`;
+        // console.log(data);
         location.replace(anchor.href);
     }
     // 'cached'
