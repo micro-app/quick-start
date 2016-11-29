@@ -1,5 +1,5 @@
 {
-  "analysis": "/Users/lixinliang/GitHub/quick-start/src/entry/analysis.js",
   "index": "/Users/lixinliang/GitHub/quick-start/src/entry/index.js",
+  "micro-app": "/Users/lixinliang/GitHub/quick-start/src/entry/micro-app.js",
   "standalone": "/Users/lixinliang/GitHub/quick-start/src/entry/standalone.js"
 }
