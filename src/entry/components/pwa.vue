@@ -1,13 +1,15 @@
 <script>
 import {
+	pad,
 	language,
-} from '../modules/user-agent.js';
-import microApp from 'micro-app';
+} from '../modules/variable.js';
 import defaultIcon from '../img/default.jpg';
+
+microApp.capable = true;
 
 const lang = language;
 
-const title = 'Example';
+const title = process.env.EXAMPLE_NAME;
 
 const button = ({
 	en : 'EDIT',
@@ -16,14 +18,12 @@ const button = ({
 
 const step1 = ({
     en : 'Tap share button <i></i> below.',
-    zh : '点击底部的分享按钮 <i></i> ；',
+    zh : `点击${ pad ? '顶部' : '底部' }的分享按钮 <i></i> ；`,
 })[lang];
 const step2 = ({
     en : 'Select Add to Home Screen.',
     zh : '添加到主屏幕。',
 })[lang];
-
-microApp.capable = true;
 
 export default {
 	data () {
@@ -45,8 +45,9 @@ export default {
 			microApp.icon = appIconBase64;
 		} else {
 			if (query.icon) {
-				data.style['background-image'] = `url(${ query.icon })`;
-				microApp.icon = (query.icon.indexOf('#') == -1) ? query.icon + '#autosize' : query.icon;
+				let icon = query.icon;
+				data.style['background-image'] = `url(${ icon })`;
+				microApp.icon = (icon.indexOf('#') == -1) ? icon + '#autosize' : icon;
 			} else {
 				data.style['background-image'] = `url(${ (microApp.icon = defaultIcon) })`;
 			}
@@ -77,7 +78,7 @@ export default {
 		<div class="app-button"
 			v-action:active
 			v-touch:tap="edit"
-		>{{* button }}</div>
+		><svg width="200px" height="200px" viewBox="0 0 1024 1024" version="1.1" xmlns="http://www.w3.org/2000/svg"><path d="M995.639 107.069l-78.708-78.708c-18.124-17.865-47.121-17.865-64.987 0l-82.333 82.333 143.694 143.694 82.333-82.074c17.865-18.383 17.865-47.38 0-65.245zM745.275 135.29l-445.321 459.561-36.506 165.7 165.7-36.506 457.231-447.91zM843.402 512v388.362c0 13.204-10.098 26.149-23.82 26.149s-696.462-0.258-696.462-0.258c-14.499 0-25.374-13.981-25.374-25.89s0-693.873 0-693.873c0-12.946 12.169-25.89 27.444-25.89h386.809l82.851-82.851h-519.37c-33.658 0-60.585 26.668-60.585 60.326v790.445c0 33.399 27.185 60.585 60.585 60.585h790.445c33.399 0 60.326-27.185 60.326-60.585v-519.37l-82.851 82.851z" /></svg>{{* button }}</div>
 	</div>
 </template>
 
@@ -180,6 +181,54 @@ export default {
 		        font-weight: 500;
 				margin-right: 5px;
 		    }
+		}
+	}
+	.pwa {
+		.app-button {
+			box-sizing: content-box;
+			padding-left: 12px + 25 + 5;
+			background-color: $baseWarn;
+			&.is-active {
+				background-color: $activeWarn;
+			}
+			svg {
+				fill: currentColor;
+				position: absolute;
+				left: 12px;
+				top: 50%;
+				transform: translateY(-50%);
+				width: 25px;
+				height: 25px;
+				margin-top: -1px;
+			}
+		}
+	}
+	@media only screen and (min-width: 414px) {
+		// ipad
+		.pwa-profile {
+			padding: 25px + 15 0;
+		}
+		.pwa-icon {
+			margin-left: 25px + 15;
+			margin-right: 15px + 15;
+		}
+		.pwa-title {
+			&::before {
+				font-size: 28px + 12;
+			    padding-right: 15px + 15;
+			}
+		}
+		.pwa-install {
+			padding: 0 25px + 15;
+		}
+		.pwa-step {
+			font-size: 16px + 6;
+			line-height: 28px + 12;
+			&:nth-child(1) {
+				i {
+					transform: scale(1.5) translateY(2px);
+				}
+			}
 		}
 	}
 </style>
