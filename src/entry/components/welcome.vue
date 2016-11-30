@@ -2,7 +2,7 @@
 import {
 	mobile,
 	language,
-} from '../modules/user-agent.js';
+} from '../modules/variable.js';
 
 const lang = language;
 
@@ -31,6 +31,9 @@ export default {
 			tipsSwitch : false,
 		};
 	},
+	ready () {
+		this.$root.clipping = false;
+	},
 	methods : {
         tap () {
 			this.$router.go({
@@ -54,7 +57,7 @@ export default {
 <template>
 	<div class="app-page welcome">
         <div class="welcome-slogon">
-            <div class="welcome-logo">L</div>
+            <h1 class="welcome-logo"> Micro App </h1>
             <div class="welcome-title">micro-app</div>
             <div class="welcome-desc">{{* desc }}</div>
         </div>
@@ -87,13 +90,17 @@ export default {
     }
     .welcome-logo {
         margin: 55px auto 0;
-        border-radius: 15%;
-        color: $baseColor;
-        border: 1px solid currentColor;
+        // border-radius: 15%;
+        // color: $baseColor;
+        // border: 1px solid currentColor;
         width: 120px + 24;
         height: 120px + 24;
-        line-height: 120px + 24;
-        font-size: 80px + 12;
+		font-size: 0;
+		background-size: 100% 100%;
+		background-repeat: no-repeat;
+		background-image: url(../img/logo.jpg);
+        // line-height: 120px + 24;
+        // font-size: 80px + 12;
     }
     .welcome-title {
         color: #fff;
@@ -128,8 +135,8 @@ export default {
         .welcome-logo {
             width: 120px;
             height: 120px;
-            line-height: 120px;
-            font-size: 80px;
+            // line-height: 120px;
+            // font-size: 80px;
             margin-top: 30px + 8;
         }
         .welcome-title {
