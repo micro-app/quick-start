@@ -1,7 +1,7 @@
 <script>
 import {
 	language,
-} from '../modules/user-agent.js';
+} from '../modules/variable.js';
 import clipper from  '../modules/clipper.js';
 
 const lang = language;
@@ -34,9 +34,9 @@ const appStatusBarStyleLabel = ({
 	en : 'AppStatusBarStyle',
 	zh : '状态栏样式',
 })[lang];
-const appNamePlaceholder = 'Example';
-const appLinkPlaceholder = 'http://example.com';
-const appIconPlaceholder = 'http://example.com/pic.jpg';
+const appNamePlaceholder = process.env.EXAMPLE_NAME;
+const appLinkPlaceholder = process.env.EXAMPLE_LINK;
+const appIconPlaceholder = process.env.EXAMPLE_ICON;
 const webIcon = ({
 	en : 'Web',
 	zh : '网络图标',
@@ -94,10 +94,10 @@ export default {
 		};
 		let query = this.$route.query;
 		if (query.name) {
-			data.appName = query.name
+			data.appName = query.name;
 		}
 		if (query.link) {
-			data.appLink = query.link
+			data.appLink = query.link;
 		}
 		if (query.icon) {
 			data.appIcon = query.icon;
@@ -233,13 +233,13 @@ export default {
 			<div class="profile-detail" v-touch:tap="focus($event)">
 				<div class="profile-label">{{* appNameLabel }}</div>
 				<div class="profile-main">
-					<input type="text" placeholder="{{* appNamePlaceholder }}" v-model="appName">
+					<input type="text" placeholder="{{* appNamePlaceholder }}" v-model="appName" autocapitalize="off" autocorrect="off">
 				</div>
 			</div>
 			<div class="profile-detail" v-touch:tap="focus($event)">
 				<div class="profile-label">{{* appLinkLabel }}</div>
 				<div class="profile-main">
-					<input type="text" placeholder="{{* appLinkPlaceholder }}" v-model="appLink">
+					<input type="text" placeholder="{{* appLinkPlaceholder }}" v-model="appLink" autocapitalize="off" autocorrect="off">
 				</div>
 			</div>
 			<div class="profile-detail">
@@ -266,7 +266,7 @@ export default {
 			<div class="profile-detail" v-touch:tap="(appIconType == 'web') && focus($event)">
 				<div class="profile-label">{{* appIconLabel }}</div>
 				<div class="profile-main" v-show="appIconType == 'web'">
-					<input type="text" placeholder="{{* appIconPlaceholder }}" v-model="appIcon">
+					<input type="text" placeholder="{{* appIconPlaceholder }}" v-model="appIcon" autocapitalize="off" autocorrect="off">
 				</div>
 				<div class="profile-main overflow-visible" v-show="appIconType == 'local'">
 					<div class="overflow-ellipsis">
