@@ -2,7 +2,7 @@
 import {
 	mobile,
 	language,
-} from '../modules/user-agent.js';
+} from '../modules/variable.js';
 import topbar from './topbar.vue';
 import clipper from './clipper.vue';
 
@@ -112,6 +112,7 @@ export default {
 		line-height: 42px + 12;
 		font-size: 20px + 8;
 		border-radius: 5px + 2;
+		z-index: 999;
 		@media only screen and (max-width: 414px) {
 			& {
 				bottom: 30px - 2;
@@ -123,16 +124,14 @@ export default {
 			}
 		}
 	}
-	#app {
-		&.device-mobile {
-			.app-button.is-active {
-				background: $activeColor;
-			}
+	.device-mobile {
+		.app-button.is-active {
+			background: $activeColor;
 		}
-		&.device-pc {
-			.app-button:hover {
-				background: $activeColor;
-			}
+	}
+	.device-pc {
+		.app-button:hover {
+			background: $activeColor;
 		}
 	}
 	.fade-transition {
