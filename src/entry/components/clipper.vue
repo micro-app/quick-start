@@ -84,11 +84,24 @@ export default {
         border-radius: 15%;
 		background-color: #fdfdfd;
 		margin-left: 0;
+		@media only screen and (min-width: 414px) {
+			@media (orientation : landscape) {
+				transform-origin: 0% 0%;
+				transform: translateX(12.5% + 25) translateY(10%) scale(.5);
+			}
+		}
 		.pwa + .clipper & {
 			pointer-events: none;
 			transform-origin: 0% 0%;
 			transform: translateX(25px) translateY(25px) scale(.4);
 			transition: transform 350ms linear;
+			@media only screen and (min-width: 414px) {
+				transform: translateX(25px + 15) translateY(25px + 15) scale(.4);
+				// @media (orientation : landscape) {
+				// 	transition: transform 350ms linear;
+				// 	// transform: translateX(12.5%) translateY(15px + 50 + 10);
+				// }
+			}
 			&::after {
 			    background-image: none;
 			}
@@ -110,7 +123,7 @@ export default {
             pointer-events: none;
             background-size: 100% 100%;
             background-repeat: no-repeat;
-            background-image: url(../img/icon.png);
+            background-image: url(../img/subline.png);
             overflow: hidden;
             border-radius: 15%;
             border: 1px solid #9f9f9f;
