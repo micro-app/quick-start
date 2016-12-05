@@ -1,0 +1,10 @@
+CACHE MANIFEST
+# @TIMESTAMP
+
+CACHE:
+/index.html
+
+NETWORK:
+*
+
+FALLBACK:
