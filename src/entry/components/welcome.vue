@@ -7,8 +7,8 @@ import {
 const lang = language;
 
 const desc = ({
-     en : 'Create your Web App any time.',
-     zh : '一款轻应用构建工具',
+     en : 'Create your Web App online.',
+     zh : '一款轻应用在线构建工具',
 })[lang];
 const button = ({
      en : 'START',
@@ -89,7 +89,8 @@ export default {
         pointer-events: none;
     }
     .welcome-logo {
-        margin: 55px auto 0;
+        // margin: 55px auto 0;
+		margin: 170px auto 0;
         // border-radius: 15%;
         // color: $baseColor;
         // border: 1px solid currentColor;
@@ -103,15 +104,17 @@ export default {
         // font-size: 80px + 12;
     }
     .welcome-title {
-        color: #fff;
+        // color: #fff;
+		color: $baseColor;
         letter-spacing: 1px;
-        text-shadow: 0 0 3px $baseColor;
+        // text-shadow: 0 0 3px $baseColor;
         text-transform: uppercase;
         height: 44px + 20;
         line-height: 44px + 20;
         font-size: 36px + 20;
-        margin-top: 50px;
-		font-weight: 700;
+        // margin-top: 50px;
+		margin-top: 30px;
+		// font-weight: 700;
     }
     .welcome-desc {
         height: 30px + 20;
@@ -124,45 +127,67 @@ export default {
         transform: translateX(-50%);
         text-align: center;
         font-size: 18px;
+		width: 100%;
         color: #e96900;
         height: 45px;
         line-height: 45px;
         // bottom: 40px;
-        bottom: 80px + 54 + 15;
+        bottom: 80px + 54 + 5;
 		pointer-events: none;
     }
+	@media only screen and (min-width: 414px) {
+		@media (orientation : landscape) {
+			.welcome-logo {
+				.device-mobile & {
+					margin-top: 90px;
+				}
+			}
+		}
+	}
     @media only screen and (max-width: 414px) {
         .welcome-logo {
-            width: 120px;
-            height: 120px;
+            // width: 120px;
+            // height: 120px;
+			width: 90px;
+			height: 90px;
             // line-height: 120px;
             // font-size: 80px;
-            margin-top: 30px + 8;
+            // margin-top: 30px + 8 + 30
+            margin-top: 110px;
         }
         .welcome-title {
             height: 44px;
             line-height: 44px;
-            font-size: 36px;
-            margin-top: 25px;
+            // font-size: 36px;
+			font-size: 26px;
+            // margin-top: 25px;
+            margin-top: 15px;
         }
         .welcome-desc {
             height: 30px;
             line-height: 30px;
-            font-size: 16px;
+            // font-size: 16px;
+			font-size: 14px;
+			margin-top: -10px;
         }
         .welcome-tips {
             height: 25px;
             line-height: 25px;
+			font-size: 14px;
             // bottom: 10px;
-            bottom: 30px - 2 + 42 + 15;
+            // bottom: 30px - 2 + 42 + 15;
+            // bottom: 50px + 42 + 3;
+            bottom: 60px + 42 + 3;
         }
     }
     @media only screen and (max-width: 320px) {
         .welcome-logo {
-            margin-top: 30px;
+            // margin-top: 30px;
+			margin-top: 70px;
         }
         .welcome-title {
-            margin-top: 25px;
+            // margin-top: 25px;
+			margin-top: 5px;
         }
     }
 </style>

@@ -37,6 +37,13 @@ export default {
 		background-size: 100% 100%;
 		background-repeat: no-repeat;
 		background-image: url(../img/safari.png);
+		@media only screen and (min-width: 414px) {
+			@media (orientation : landscape) {
+				& {
+					margin: 20% auto 0;
+				}
+			}
+		}
 	}
 	.tips-title {
 		font-size: 16px;

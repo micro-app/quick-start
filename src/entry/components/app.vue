@@ -64,7 +64,8 @@ export default {
 			}
 		}
 		&.device-pc {
-			min-height: 600px;
+			// min-height: 600px;
+			min-height: 800px;
 			@media only screen and (max-width: 414px) {
 	            min-height: 480px;
 	        }
@@ -82,6 +83,7 @@ export default {
 	#app {
 		&.device-mobile {
 			@media only screen and (max-height: 414px) and (orientation : landscape) {
+				.clipper,
 				.app-page {
 					display: none;
 				}
@@ -106,7 +108,7 @@ export default {
 		background: $baseColor;
 		cursor: pointer;
 		color: #fff;
-		bottom: 80px;
+		bottom: 85px;
 		padding: 0 12px + 3;
 		height: 42px + 12;
 		line-height: 42px + 12;
@@ -115,12 +117,19 @@ export default {
 		z-index: 999;
 		@media only screen and (max-width: 414px) {
 			& {
-				bottom: 30px - 2;
+				bottom: 60px;
 				padding: 0 12px;
 				height: 42px;
 				line-height: 42px;
 				font-size: 20px;
 				border-radius: 5px;
+			}
+		}
+		@media only screen and (min-width: 414px) {
+			@media (orientation : landscape) {
+				.device-mobile & {
+					bottom: 60px;
+				}
 			}
 		}
 	}

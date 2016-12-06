@@ -228,7 +228,7 @@ export default {
 
 <template>
 	<div class="app-page profile">
-		<div class="profile-title">{{* title }}</div>
+		<div class="profile-title" v-bind:class="{ 'is-clipping' : clipping }">{{* title }}</div>
 		<div v-show="!clipping" transition="fade">
 			<div class="profile-detail" v-touch:tap="focus($event)">
 				<div class="profile-label">{{* appNameLabel }}</div>
@@ -299,6 +299,14 @@ export default {
 		font-size: 28px;
 		color: $baseColor;
 		margin-top: 15px;
+		@media only screen and (max-width: 320px) {
+			& {
+				transition: opacity 250ms linear;
+				&.is-clipping {
+					opacity: 0;
+				}
+			}
+		}
 	}
 	.profile-detail {
 		height: 45px;

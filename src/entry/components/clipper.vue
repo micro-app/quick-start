@@ -79,7 +79,8 @@ export default {
         padding-top: 80%;
         top: 0;
         left: 0%;
-        transform: translateX(12.5%) translateY(15px + 50 + 10);
+        // transform: translateX(12.5%) translateY(15px + 50 + 10);
+        transform: translateX(12.5%) translateY(15px + 50 + 10 + 15);
         overflow: hidden;
         border-radius: 15%;
 		background-color: #fdfdfd;
@@ -89,6 +90,9 @@ export default {
 				transform-origin: 0% 0%;
 				transform: translateX(12.5% + 25) translateY(10%) scale(.5);
 			}
+		}
+		@media only screen and (max-width: 320px) {
+			transform: translateX(12.5%) translateY(15px + 20);
 		}
 		.pwa + .clipper & {
 			pointer-events: none;
