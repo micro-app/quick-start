@@ -38,7 +38,7 @@ let config = {
             },
             {
                 test : /\.(png|jpg|gif|svg)$/,
-                loader : `url?limit=${ imageSize }`,
+                loader : `url?limit=${ imageSize }&name=../img/[name].[ext]?[hash]`,
             },
             {
                 test : /\.css$/,
