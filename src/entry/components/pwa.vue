@@ -36,7 +36,7 @@ export default {
 		};
 		let query = this.$route.query;
 		if (query.name) {
-			data.title = query.name;
+			data.title = decodeURIComponent(query.name);
 		}
 		microApp.title = data.title;
 		microApp.statusBarStyle = query.style ? query.style : null;
@@ -45,7 +45,7 @@ export default {
 			microApp.icon = appIconBase64;
 		} else {
 			if (query.icon) {
-				let icon = query.icon;
+				let icon = decodeURIComponent(query.icon);
 				data.style['background-image'] = `url(${ icon })`;
 				microApp.icon = (icon.indexOf('#') == -1) ? icon + '#autosize' : icon;
 			} else {

@@ -94,13 +94,13 @@ export default {
 		};
 		let query = this.$route.query;
 		if (query.name) {
-			data.appName = query.name;
+			data.appName = decodeURIComponent(query.name);
 		}
 		if (query.link) {
-			data.appLink = query.link;
+			data.appLink = decodeURIComponent(query.link);
 		}
 		if (query.icon) {
-			data.appIcon = query.icon;
+			data.appIcon = decodeURIComponent(query.icon);
 		}
 		if (this.$root.appIconBase64 && appIconFilePath) {
 			data.appIconType = 'local';
@@ -121,16 +121,16 @@ export default {
 		go ( base64, icon ) {
 			let query = {};
 			if (this.appName) {
-				query.name = this.appName;
+				query.name = encodeURIComponent(this.appName);
 			}
 			if (this.appLink) {
-				query.link = this.appLink;
+				query.link = encodeURIComponent(this.appLink);
 			}
 			if (this.appStatusBarStyle) {
 				query.style = this.appStatusBarStyle;
 			}
 			if (icon) {
-				query.icon = icon;
+				query.icon = encodeURIComponent(icon);
 			}
 			if (base64) {
 				appIconFilePath = this.appIconFilePath;

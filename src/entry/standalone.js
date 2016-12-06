@@ -35,7 +35,7 @@ if (navigator.standalone) {
         (location.hash.split('?')[1]||'').split('&').forEach(( param ) => {
             let temp = param.split('=');
             let key = temp[0];
-            let value = decodeURIComponent(temp[1] || '');
+            let value = decodeURIComponent(decodeURIComponent(temp[1] || ''));
             if (key == 'link') {
                 link = value;
             } else {
@@ -44,7 +44,7 @@ if (navigator.standalone) {
         });
         anchor.href = link;
         if (anchor.hash && anchor.hash.length > 1) {
-            data.hash = decodeURIComponent(anchor.hash.slice(1));
+            data.hash = anchor.hash.slice(1);
         }
         anchor.hash = `${ namespace }=${ encodeURIComponent(JSON.stringify(data)) }`;
         // console.log(data);
