@@ -31,14 +31,12 @@ let start = () => {
         });
     }
     if (task == 'build') {
-        let cmd;
         if (buildjs) {
             step3().then(step6).then(step7).then(( option ) => {
-                cmd = `webpack --progress --colors --config ./webpack/webpack.build.js${ option }`;
                 return step1().then(() => {
-                    return cmd;
+                    return `webpack --progress --colors --config ./webpack/webpack.build.js${ option }`;
                 });
-            }).then(step4).then(() => {
+            }).then(step4).then(( cmd ) => {
                 return `${ cmd } --uglify`;
             }).then(step4).then(() => {
                 console.log('build complete!'.green);
@@ -89,8 +87,16 @@ let step2 = () => new Promise(( resolve, reject ) => {
             if (fs.statSync(file).isDirectory() && filename == 'entry') {
                 return;
             }
-            if (fs.statSync(file).isFile() && (path.extname(file) == '.html' || path.extname(file) == '.appcache')) {
-                return;
+            if (fs.statSync(file).isFile()) {
+                if (path.extname(file) == '.ejs') {
+                    return;
+                }
+                if (path.extname(file) == '.html') {
+                    return;
+                }
+                if (path.extname(file) == '.appcache') {
+                    return;
+                }
             }
             fse.copySync(file, path.join(outputPath, filename));
         });

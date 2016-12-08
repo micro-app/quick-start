@@ -1,7 +1,6 @@
 'use strict';
 
 let path = require('path');
-let moment = require('moment');
 let webpack = require('webpack');
 let autoprefixer = require('autoprefixer');
 let ExtractTextWebpackPlugin = require('extract-text-webpack-plugin');

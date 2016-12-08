@@ -19,36 +19,28 @@ if (navigator.standalone) {
         }
     }, false);
     function redirect ( event ) {
-        let anchor = document.createElement('a');
         let link = process.env.EXAMPLE_LINK;
-        let data = {};
-        data.hash = '';
-        data.query = {};
-        data.timing = {};
-        data.type = event.type;
-        data.version = '@VERSION';
-        data.timeStamp = +new Date;
-        data.lastUpdate = store('last-update');
+        let referrer = {};
+        referrer.app = {};
+        referrer.timing = {};
+        referrer.type = event.type;
+        referrer.version = process.env.VERSION;
+        referrer.timeStamp = +new Date;
+        referrer.lastUpdate = store('last-update');
         for (let key in performance.timing) {
-            data.timing[key] = performance.timing[key];
+            referrer.timing[key] = performance.timing[key];
         }
         (location.hash.split('?')[1]||'').split('&').forEach(( param ) => {
             let temp = param.split('=');
             let key = temp[0];
             let value = decodeURIComponent(decodeURIComponent(temp[1] || ''));
+            referrer.app[key] = value;
             if (key == 'link') {
                 link = value;
-            } else {
-                data.query[key] = value;
             }
         });
-        anchor.href = link;
-        if (anchor.hash && anchor.hash.length > 1) {
-            data.hash = anchor.hash.slice(1);
-        }
-        anchor.hash = `${ namespace }=${ encodeURIComponent(JSON.stringify(data)) }`;
-        // console.log(data);
-        location.replace(anchor.href);
+        window.name = `${ namespace }=${ encodeURIComponent(JSON.stringify(referrer)) }`;
+        location.replace(link);
     }
     // 'cached'
     // 'checking',

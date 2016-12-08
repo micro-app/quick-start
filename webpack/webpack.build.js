@@ -2,6 +2,7 @@
 
 let fs = require('fs');
 let path = require('path');
+let fse = require('fs-extra');
 let moment = require('moment');
 let webpack = require('webpack');
 let autoprefixer = require('autoprefixer');
@@ -55,8 +56,9 @@ let config = {
             };
         } else {
             return {
-                path : './dist/js/',
-                filename : '[name].js',
+                path : './dist/',
+                filename : 'js/[name].js',
+                publicPath : '',
             };
         }
     })(),
@@ -137,14 +139,27 @@ if (process.argv.build == 'js') {
             comments : false,
         },
     }));
-    config.plugins.push(new ExtractTextWebpackPlugin('../css/[name].css'));
+    config.plugins.push(new ExtractTextWebpackPlugin('css/[name].css'));
     fs.readdirSync(sourcePath).forEach(( filename ) => {
-        if (/\.(html|appcache)$/.test(filename)) {
+        if (/\.appcache$/.test(filename)) {
             config.plugins.push(new HtmlWebpackPlugin({
                 minify : false,
                 inject : false,
-                filename : path.join('..', filename),
+                filename,
                 template : path.join(sourcePath, filename),
+            }));
+        }
+        if (/\.html$/.test(filename)) {
+            let template = path.join(sourcePath, filename);
+            let ejs = path.join(template, '..', `${ path.basename(filename, '.html') }.ejs`);
+            if (fs.existsSync(ejs)) {
+                template = ejs;
+            }
+            config.plugins.push(new HtmlWebpackPlugin({
+                minify : false,
+                filename,
+                template,
+                inlineSource : '.(js|css)$',
             }));
         }
     });
@@ -156,7 +171,46 @@ if (process.argv.build == 'js') {
         });
     });
     config.plugins.push(new HtmlReplaceWebpackPlugin(result));
-    // new HtmlWebpackInlineSourcePlugin(),
+    // sort
+    config.plugins.push({
+        apply ( compiler ) {
+            compiler.plugin('compilation', ( compilation ) => {
+                compilation.plugin('html-webpack-plugin-alter-asset-tags', ( htmlPluginData, callback ) => {
+                    if (/\.html$/.test(htmlPluginData.plugin.options.filename)) {
+                        let top = [];
+                        let head = [];
+                        let body = [];
+                        htmlPluginData.head.concat(htmlPluginData.body).forEach(( source ) => {
+                            if (source.tagName == 'link') {
+                                head.push(source);
+                            }
+                            if (source.tagName == 'script') {
+                                if (/\bstandalone\.js$/.test(source.attributes.src)) {
+                                    top.push(source);
+                                } else {
+                                    body.push(source);
+                                }
+                            }
+                        });
+                        htmlPluginData.head = top.concat(head);
+                        htmlPluginData.body = body;
+                    }
+                    callback(null, htmlPluginData);
+                });
+            });
+        },
+    });
+    config.plugins.push(new HtmlWebpackInlineSourcePlugin());
+    // remove
+    config.plugins.push({
+        apply ( compiler ) {
+            compiler.plugin('done', ( stats ) => {
+                let outputPath = path.join(compiler.context, compiler.outputPath);
+                fse.removeSync(path.join(outputPath, 'js'));
+                fse.removeSync(path.join(outputPath, 'css'));
+            });
+        },
+    });
 }
 
 module.exports = config;
