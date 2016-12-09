@@ -5,7 +5,9 @@ import {
 } from '../modules/variable.js';
 import defaultIcon from '../img/default.jpg';
 
+// default
 microApp.capable = true;
+microApp.icon = 'https://micro-app.github.io/logo.jpg';
 
 const lang = language;
 
@@ -39,6 +41,7 @@ export default {
 			data.title = decodeURIComponent(query.name);
 		}
 		microApp.title = data.title;
+		document.title = data.title;
 		microApp.statusBarStyle = query.style ? query.style : null;
 		let appIconBase64 = this.$root.appIconBase64;
 		if (appIconBase64) {
