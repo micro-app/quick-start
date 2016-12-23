@@ -25,7 +25,7 @@ let config = {
         filename : 'js/[name].js',
         publicPath : '',
     },
-    extensions : ['.vue', '.js', '.json', '.scss'],
+    extensions : ['.vue', '.js', '.coffee', '.json', '.scss'],
     resolve : {
         alias,
     },
@@ -34,6 +34,10 @@ let config = {
             {
                 test : /\.vue$/,
                 loader : 'vue',
+            },
+            {
+                test : /\.html$/,
+                loader : 'raw',
             },
             {
                 test : /\.(png|jpg|gif|svg)$/,
@@ -56,6 +60,14 @@ let config = {
                     // plugins : ['transform-remove-strict-mode'],
                     // plugins: ['transform-runtime'],
                 },
+            },
+            {
+                test : /\.coffee/,
+                loader : 'coffee',
+            },
+            {
+                test : /\.(coffee\.md|litcoffee)$/,
+                loader : 'coffee?literate',
             },
         ],
     },
