@@ -19,14 +19,13 @@ const alias = {};
 const imageSize = 10240 * 3;
 const sourcePath = path.join(__dirname, '../src');
 const constant = {
-    NODE_ENV : 'production',
     NAME : packageJson.name,
     VERSION : packageJson.version,
-    MANIFEST : 'manifest.appcache',
-    TIMESTAMP : moment().format('YYYY-MM-DD h:mm:ss a'),
     EXAMPLE_NAME : 'Example',
     EXAMPLE_LINK : 'http://example.com',
     EXAMPLE_ICON : 'http://example.com/pic.jpg',
+    NODE_ENV : 'production',
+    TIMESTAMP : moment().format('YYYY-MM-DD h:mm:ss a'),
 };
 
 const banner =
