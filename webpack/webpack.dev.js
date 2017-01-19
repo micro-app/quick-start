@@ -91,6 +91,20 @@ let config = {
     postcss () {
         return [autoprefixer({ browsers : ['last 2 versions'] })];
     },
+    devServer : {
+        proxy : {
+            '/' : {
+                bypass ( req, res ) {
+                    if (/^\/manifest\.appcache$/.test(req.url)) {
+                        res.writeHead(200, { 'Content-Type' : 'text/cache-manifest' });
+                        res.end('');
+                    } else {
+                        return req.url;
+                    }
+                },
+            },
+        },
+    },
 };
 
 module.exports = config;
