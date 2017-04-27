@@ -27,8 +27,12 @@ if (navigator.standalone) {
         referrer.version = process.env.VERSION;
         referrer.timeStamp = +new Date;
         referrer.lastUpdate = store('last-update');
-        for (let key in performance.timing) {
-            referrer.timing[key] = performance.timing[key];
+        if (performance.timing.toJSON) {
+            referrer.timing = performance.timing.toJSON();
+        } else {
+            for (let key in performance.timing) {
+                referrer.timing[key] = performance.timing[key];
+            }
         }
         (location.hash.split('?')[1]||'').split('&').forEach(( param ) => {
             let temp = param.split('=');
